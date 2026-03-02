@@ -1,4 +1,664 @@
-cd portfolio
-git add index.html
-git commit -m "Add initial CV index.html"
-git push origin main
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tony Alarcon — Engineering CV</title>
+  <meta name="description" content="Digital CV & Projects — Tony Alarcon (General Engineering, Project Management)." />
+  <style>
+    :root{
+      --bg: #0b1220;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.08);
+      --border: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --accent: #7aa2ff;
+      --accent2:#6ef3c5;
+      --shadow: 0 10px 40px rgba(0,0,0,.35);
+      --radius: 18px;
+      --radius2: 14px;
+      --max: 1100px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    [data-theme="light"]{
+      --bg: #f5f7ff;
+      --panel: rgba(0,0,0,.04);
+      --panel2: rgba(0,0,0,.06);
+      --border: rgba(0,0,0,.10);
+      --text: rgba(0,0,0,.88);
+      --muted: rgba(0,0,0,.62);
+      --accent: #2f64ff;
+      --accent2:#0aa77a;
+      --shadow: 0 12px 40px rgba(0,0,0,.10);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: var(--font);
+      color: var(--text);
+      background:
+        radial-gradient(900px 500px at 20% 0%, rgba(122,162,255,.25), transparent 60%),
+        radial-gradient(900px 500px at 90% 10%, rgba(110,243,197,.18), transparent 60%),
+        var(--bg);
+    }
+    a{color:inherit}
+    .wrap{max-width:var(--max); margin:0 auto; padding:26px 16px 70px;}
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:14px 14px;
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, var(--panel2), var(--panel));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      position: sticky; top: 10px; z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px; min-width: 240px;
+    }
+    .avatar{
+      width:42px; height:42px; border-radius:14px;
+      background: linear-gradient(135deg, rgba(122,162,255,.8), rgba(110,243,197,.7));
+      display:grid; place-items:center;
+      font-weight:800; color: rgba(0,0,0,.75);
+      box-shadow: 0 12px 30px rgba(0,0,0,.20);
+      user-select:none;
+    }
+    .brand .name{font-weight:800; letter-spacing:.2px}
+    .brand .role{font-size:12px; color: var(--muted); margin-top:2px}
+    .actions{display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+    .btn{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      padding:10px 12px;
+      border-radius: 14px;
+      text-decoration:none;
+      display:inline-flex; align-items:center; gap:8px;
+      cursor:pointer;
+      transition: transform .08s ease, background .2s ease, border-color .2s ease;
+      user-select:none;
+    }
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.07); border-color: rgba(122,162,255,.35)}
+    .btn.primary{
+      border-color: rgba(122,162,255,.45);
+      background: rgba(122,162,255,.12);
+    }
+    .btn.small{padding:9px 10px; border-radius: 12px; font-size: 13px}
+    .grid{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:16px;
+      margin-top:16px;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns: 1fr}
+      .brand{min-width:auto}
+    }
+    .card{
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, var(--panel2), var(--panel));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:16px;
+    }
+    .card h2{
+      margin:0 0 10px;
+      font-size: 14px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .hero{
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .headline{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .headline h1{
+      margin:0;
+      font-size: 34px;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+    .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px}
+    .chip{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      padding:7px 10px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+    .chip strong{color: var(--text); font-weight: 700}
+    .summary{
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 15px;
+      margin: 0;
+    }
+
+    .nav{
+      display:flex; gap:8px; flex-wrap:wrap;
+      margin-top: 12px;
+    }
+    .tab{
+      border:1px solid transparent;
+      padding:10px 12px;
+      border-radius: 14px;
+      color: var(--muted);
+      cursor:pointer;
+      user-select:none;
+      background: rgba(255,255,255,.03);
+      transition: background .2s ease, border-color .2s ease;
+      font-size: 13.5px;
+    }
+    .tab[aria-selected="true"]{
+      color: var(--text);
+      border-color: rgba(122,162,255,.45);
+      background: rgba(122,162,255,.12);
+    }
+    .panel{display:none}
+    .panel.active{display:block}
+
+    .list{display:flex; flex-direction:column; gap:10px}
+    .item{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      border-radius: var(--radius2);
+      padding:12px;
+    }
+    .item .top{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap}
+    .item .title{font-weight:800}
+    .item .meta{color: var(--muted); font-size: 13px}
+    .item ul{margin:8px 0 0; padding-left:18px; color: var(--muted); line-height: 1.55}
+    .item p{margin:8px 0 0; color: var(--muted); line-height: 1.55}
+    .pillrow{margin-top:8px; display:flex; flex-wrap:wrap; gap:8px}
+    .pill{
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-size: 12.5px;
+    }
+    .kpi{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:10px;
+    }
+    @media (max-width: 640px){
+      .kpi{grid-template-columns: 1fr}
+    }
+    .kpi .box{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      border-radius: var(--radius2);
+      padding:12px;
+    }
+    .kpi .box .big{font-weight:900; font-size: 16px}
+    .kpi .box .small{color: var(--muted); font-size: 12.5px; margin-top:4px}
+    .footer{
+      margin-top: 16px;
+      text-align:center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Print */
+    @media print{
+      .topbar, .nav, .actions { display:none !important; }
+      body{ background: #fff !important; color:#111 !important; }
+      .card, .item, .box{ box-shadow:none !important; }
+      a{ text-decoration:none !important; color:#111 !important;}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap" id="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="avatar" id="avatar">TA</div>
+        <div>
+          <div class="name" id="topName">Tony Alarcon</div>
+          <div class="role" id="topRole">General Engineering — Project Manager</div>
+        </div>
+      </div>
+      <div class="actions">
+        <a class="btn small" id="btnEmail" href="#">✉️ Email</a>
+        <a class="btn small" id="btnLinkedIn" href="#" target="_blank" rel="noreferrer">in LinkedIn</a>
+        <a class="btn small" id="btnCV" href="#" target="_blank" rel="noreferrer">⬇️ CV PDF</a>
+        <button class="btn small" id="btnPrint" type="button">🖨️ Print</button>
+        <button class="btn small primary" id="btnTheme" type="button">🌓 Theme</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- Left: main -->
+      <div class="card hero">
+        <div class="headline">
+          <div>
+            <h1 id="name">Tony Alarcon</h1>
+            <div class="chips" id="chips"></div>
+          </div>
+        </div>
+
+        <p class="summary" id="summary"></p>
+
+        <div class="nav" role="tablist" aria-label="CV navigation">
+          <div class="tab" role="tab" tabindex="0" data-target="profile" aria-selected="true">Profile</div>
+          <div class="tab" role="tab" tabindex="0" data-target="experience" aria-selected="false">Experience</div>
+          <div class="tab" role="tab" tabindex="0" data-target="projects" aria-selected="false">Projects</div>
+          <div class="tab" role="tab" tabindex="0" data-target="education" aria-selected="false">Education</div>
+          <div class="tab" role="tab" tabindex="0" data-target="skills" aria-selected="false">Skills</div>
+          <div class="tab" role="tab" tabindex="0" data-target="languages" aria-selected="false">Languages</div>
+          <div class="tab" role="tab" tabindex="0" data-target="interests" aria-selected="false">Interests</div>
+          <div class="tab" role="tab" tabindex="0" data-target="contact" aria-selected="false">Contact</div>
+        </div>
+
+        <div class="panel active" id="profile" role="tabpanel">
+          <div class="kpi" id="kpis"></div>
+          <div style="height:12px"></div>
+          <div class="list" id="profileBlocks"></div>
+        </div>
+
+        <div class="panel" id="experience" role="tabpanel">
+          <div class="list" id="experienceList"></div>
+        </div>
+
+        <div class="panel" id="projects" role="tabpanel">
+          <div class="list" id="projectsList"></div>
+        </div>
+
+        <div class="panel" id="education" role="tabpanel">
+          <div class="list" id="educationList"></div>
+        </div>
+
+        <div class="panel" id="skills" role="tabpanel">
+          <div class="list" id="skillsList"></div>
+        </div>
+
+        <div class="panel" id="languages" role="tabpanel">
+          <div class="list" id="languagesList"></div>
+        </div>
+
+        <div class="panel" id="interests" role="tabpanel">
+          <div class="list" id="interestsList"></div>
+        </div>
+
+        <div class="panel" id="contact" role="tabpanel">
+          <div class="list" id="contactList"></div>
+        </div>
+      </div>
+
+      <!-- Right: sidebar -->
+      <div class="card">
+        <h2>Quick Info</h2>
+        <div class="list" id="sidebar"></div>
+        <div class="footer" id="footer"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================
+    // EDIT HERE (easy)
+    // =========================
+    const DATA = {
+      name: "Tony Alarcon",
+      role: "General Engineering — Project Manager",
+      location: "Lavoulte-sur-Rhône, France",
+      phone: "+33 6 95 22 66 53",
+      email: "tony.alarcon07@gmail.com",
+      linkedin: "https://www.linkedin.com/in/ADD-YOUR-LINK", // <-- change
+      cvPdfUrl: "Cv-Alarcon-Tony.pdf", // <-- put your PDF in same folder + rename, or paste a link
+
+      chips: [
+        { label: "Target", value: "Aerospace / Defense" },
+        { label: "CAD", value: "SolidWorks" },
+        { label: "ERP", value: "SYLOB" },
+        { label: "Focus", value: "Project Management" }
+      ],
+
+      summary:
+        "Determined and motivated General Engineering student completing an apprenticeship with CESI Engineering School and SOTIC. Seeking an international opportunity in aerospace or defense. Strong background in 3D mechanical design, ERP documentation, and industrial process improvement.",
+
+      kpis: [
+        { big: "Apprenticeship", small: "CESI × SOTIC" },
+        { big: "3D CAD", small: "SolidWorks" },
+        { big: "ERP", small: "SYLOB integration" }
+      ],
+
+      profileBlocks: [
+        {
+          title: "What I bring",
+          bullets: [
+            "Hands-on industrial experience (operations + design office)",
+            "Structured project mindset (planning, coordination, follow-up)",
+            "Technical documentation and traceability in ERP (SYLOB)",
+            "CAD modeling for motor orders and customer deliverables"
+          ]
+        },
+        {
+          title: "Looking for",
+          text:
+            "An international opportunity where I can contribute to high-technology engineering projects in aerospace or defense, combining mechanical design, industrial methods and project coordination."
+        }
+      ],
+
+      experience: [
+        {
+          title: "Apprentice Engineer — SOTIC",
+          meta: "Lepouzin, France · 2023–Present",
+          bullets: [
+            "Managed technical files and documentation through SYLOB ERP",
+            "Improved technician efficiency with a tablet-based project",
+            "Created 3D plans for different motor orders and integrated them into ERP",
+            "Managed an industrial project: connected motoreductor"
+          ]
+        },
+        {
+          title: "Design Office Internship — 1amis technologie",
+          meta: "Portes-lès-Valence, France · 2021 (2 months)",
+          bullets: [
+            "Created an industrial project for Domochemicals",
+            "Organized project meetings and customer follow-up",
+            "Created 3D plans for customers"
+          ]
+        },
+        {
+          title: "Operator — NP Sud",
+          meta: "Beauchastel, France · 2021 (2 months)",
+          bullets: [
+            "Assembled plastic objects produced by the company",
+            "Packaged final products"
+          ]
+        }
+      ],
+
+      projects: [
+        {
+          title: "Technician Efficiency Digitalization (Tablet Project)",
+          meta: "Process optimization",
+          text:
+            "Implemented a tablet-based approach to streamline technician operations and improve productivity."
+        },
+        {
+          title: "3D Motor Order Library + ERP Integration",
+          meta: "CAD + traceability",
+          text:
+            "Built 3D models/plans for motor orders and added them to the SYLOB ERP for standardized documentation."
+        },
+        {
+          title: "Connected Motoreductor",
+          meta: "Project management",
+          text:
+            "Coordinated a project around an industrial connected mechanical system, aligning technical needs and execution."
+        },
+        {
+          title: "Domochemicals Client Project",
+          meta: "Customer & technical follow-up",
+          text:
+            "Organized meetings, ensured follow-up, and produced customer-facing 3D plans."
+        }
+      ],
+
+      education: [
+        {
+          title: "CESI — School of Engineering",
+          meta: "Montpellier, France · 2023–2027",
+          text: "Master's degree in generalist engineering (apprenticeship)."
+        },
+        {
+          title: "ECAM LaSalle — School of Engineering",
+          meta: "Lyon, France · 2023–2024",
+          text:
+            "Master's degree in industrial and mechanical engineering (work-study). Core: Mechanical, Electrical & Industrial Engineering, Materials Science, IT."
+        },
+        {
+          title: "Pre-Engineering classes — Lycée Algoud Laffemas",
+          meta: "Valence, France · 2022–2023",
+          text: ""
+        },
+        {
+          title: "HND (High National Diploma) — Lycée Algoud Laffemas",
+          meta: "Valence, France · 2020–2022",
+          text: "2-year undergraduate technician qualification — Industrial Products Design."
+        },
+        {
+          title: "Baccalaureate — Lycée Algoud Laffemas",
+          meta: "Valence, France · 2017–2020",
+          text: "Sciences & Industry Technologies and Sustainable Development."
+        }
+      ],
+
+      skills: [
+        { title: "Engineering", pills: ["Mechanical", "Industrial", "Methods", "Process improvement"] },
+        { title: "CAD / Tools", pills: ["SolidWorks", "3D printing", "Machining center (basic)", "Office Suite"] },
+        { title: "Software", pills: ["SYLOB ERP", "Python (basic)"] },
+        { title: "Soft skills", pills: ["Project coordination", "Documentation", "Client communication"] }
+      ],
+
+      languages: [
+        { title: "French", meta: "Native" },
+        { title: "English", meta: "B2 (Intermediate)" },
+        { title: "Spanish", meta: "A2 (Beginner)" }
+      ],
+
+      interests: ["Aerospace", "Watchmaking", "3D printing", "Basketball", "Gym", "Video games", "Space"],
+
+      contact: [
+        { label: "Email", value: "tony.alarcon07@gmail.com", href: "mailto:tony.alarcon07@gmail.com" },
+        { label: "Phone", value: "+33 6 95 22 66 53", href: "tel:+33695226653" },
+        { label: "Location", value: "Lavoulte-sur-Rhône, France" },
+        { label: "LinkedIn", value: "Add your link", href: "https://www.linkedin.com/in/ADD-YOUR-LINK" }
+      ]
+    };
+
+    // =========================
+    // Render
+    // =========================
+    const $ = (id) => document.getElementById(id);
+
+    function setText(id, text){ $(id).textContent = text; }
+    function el(tag, cls){ const e = document.createElement(tag); if(cls) e.className = cls; return e; }
+
+    function render(){
+      setText("topName", DATA.name);
+      setText("topRole", DATA.role);
+      setText("name", DATA.name);
+
+      const initials = DATA.name.split(" ").slice(0,2).map(s => s[0]?.toUpperCase()).join("");
+      $("avatar").textContent = initials || "CV";
+
+      // top buttons
+      $("btnEmail").href = `mailto:${DATA.email}`;
+      $("btnLinkedIn").href = DATA.linkedin;
+      $("btnCV").href = DATA.cvPdfUrl;
+
+      // chips
+      const chips = $("chips");
+      chips.innerHTML = "";
+      DATA.chips.forEach(c => {
+        const chip = el("div","chip");
+        chip.innerHTML = `<strong>${c.label}:</strong> ${c.value}`;
+        chips.appendChild(chip);
+      });
+
+      // summary
+      $("summary").textContent = DATA.summary;
+
+      // KPIs
+      const kpis = $("kpis");
+      kpis.innerHTML = "";
+      DATA.kpis.forEach(k => {
+        const box = el("div","box");
+        box.innerHTML = `<div class="big">${k.big}</div><div class="small">${k.small}</div>`;
+        kpis.appendChild(box);
+      });
+
+      // profile blocks
+      const pb = $("profileBlocks");
+      pb.innerHTML = "";
+      DATA.profileBlocks.forEach(b => {
+        const item = el("div","item");
+        const top = el("div","top");
+        top.innerHTML = `<div class="title">${b.title}</div>`;
+        item.appendChild(top);
+        if(b.text){
+          const p = el("p"); p.textContent = b.text; item.appendChild(p);
+        }
+        if(b.bullets?.length){
+          const ul = el("ul");
+          b.bullets.forEach(x => { const li=el("li"); li.textContent=x; ul.appendChild(li); });
+          item.appendChild(ul);
+        }
+        pb.appendChild(item);
+      });
+
+      // experience
+      const exp = $("experienceList"); exp.innerHTML = "";
+      DATA.experience.forEach(e => exp.appendChild(renderEntry(e)));
+
+      // projects
+      const pr = $("projectsList"); pr.innerHTML = "";
+      DATA.projects.forEach(p => {
+        const item = el("div","item");
+        item.innerHTML = `
+          <div class="top">
+            <div class="title">${p.title}</div>
+            <div class="meta">${p.meta || ""}</div>
+          </div>
+          <p>${p.text || ""}</p>
+        `;
+        pr.appendChild(item);
+      });
+
+      // education
+      const ed = $("educationList"); ed.innerHTML = "";
+      DATA.education.forEach(e => ed.appendChild(renderEntry(e)));
+
+      // skills
+      const sk = $("skillsList"); sk.innerHTML = "";
+      DATA.skills.forEach(s => {
+        const item = el("div","item");
+        item.innerHTML = `
+          <div class="top">
+            <div class="title">${s.title}</div>
+            <div class="meta"></div>
+          </div>
+        `;
+        const row = el("div","pillrow");
+        (s.pills || []).forEach(p => {
+          const pill = el("div","pill"); pill.textContent = p; row.appendChild(pill);
+        });
+        item.appendChild(row);
+        sk.appendChild(item);
+      });
+
+      // languages
+      const lg = $("languagesList"); lg.innerHTML = "";
+      DATA.languages.forEach(l => lg.appendChild(renderEntry({title:l.title, meta:l.meta})));
+
+      // interests
+      const it = $("interestsList"); it.innerHTML = "";
+      const item = el("div","item");
+      item.innerHTML = `<div class="top"><div class="title">Interests</div><div class="meta"></div></div>`;
+      const row = el("div","pillrow");
+      DATA.interests.forEach(x => { const pill = el("div","pill"); pill.textContent = x; row.appendChild(pill); });
+      item.appendChild(row);
+      it.appendChild(item);
+
+      // contact
+      const ct = $("contactList"); ct.innerHTML = "";
+      DATA.contact.forEach(c => {
+        const item = el("div","item");
+        const value = c.href ? `<a href="${c.href}" target="${c.href.startsWith("http") ? "_blank" : ""}" rel="noreferrer">${c.value}</a>` : c.value;
+        item.innerHTML = `<div class="top"><div class="title">${c.label}</div><div class="meta">${value}</div></div>`;
+        ct.appendChild(item);
+      });
+
+      // sidebar quick info
+      const sb = $("sidebar"); sb.innerHTML = "";
+      [
+        {label:"Location", value: DATA.location},
+        {label:"Email", value: DATA.email, href:`mailto:${DATA.email}`},
+        {label:"Phone", value: DATA.phone, href:`tel:${DATA.phone.replace(/\s+/g,"")}`},
+      ].forEach(x => {
+        const item = el("div","item");
+        item.innerHTML = `<div class="top"><div class="title">${x.label}</div><div class="meta">${x.href ? `<a href="${x.href}">${x.value}</a>` : x.value}</div></div>`;
+        sb.appendChild(item);
+      });
+
+      $("footer").textContent = `© ${new Date().getFullYear()} ${DATA.name} · Built with GitHub Pages (free)`;
+    }
+
+    function renderEntry(e){
+      const item = el("div","item");
+      item.innerHTML = `
+        <div class="top">
+          <div class="title">${e.title}</div>
+          <div class="meta">${e.meta || ""}</div>
+        </div>
+        ${e.text ? `<p>${e.text}</p>` : ""}
+      `;
+      if(e.bullets?.length){
+        const ul = el("ul");
+        e.bullets.forEach(b => { const li=el("li"); li.textContent=b; ul.appendChild(li); });
+        item.appendChild(ul);
+      }
+      return item;
+    }
+
+    // Tabs
+    const tabs = Array.from(document.querySelectorAll(".tab"));
+    const panels = Array.from(document.querySelectorAll(".panel"));
+
+    function activate(id){
+      tabs.forEach(t => t.setAttribute("aria-selected", String(t.dataset.target === id)));
+      panels.forEach(p => p.classList.toggle("active", p.id === id));
+      history.replaceState(null, "", "#" + id);
+    }
+    tabs.forEach(t => {
+      t.addEventListener("click", () => activate(t.dataset.target));
+      t.addEventListener("keydown", (e) => {
+        if(e.key === "Enter" || e.key === " ") activate(t.dataset.target);
+      });
+    });
+
+    // Theme
+    const themeKey = "cv_theme";
+    function setTheme(mode){
+      document.documentElement.setAttribute("data-theme", mode);
+      localStorage.setItem(themeKey, mode);
+    }
+    $("btnTheme").addEventListener("click", () => {
+      const cur = document.documentElement.getAttribute("data-theme") || "dark";
+      setTheme(cur === "dark" ? "light" : "dark");
+    });
+
+    // Print
+    $("btnPrint").addEventListener("click", () => window.print());
+
+    // Init
+    const saved = localStorage.getItem(themeKey);
+    if(saved) setTheme(saved);
+
+    render();
+
+    const hash = (location.hash || "").replace("#", "");
+    if(hash && panels.some(p => p.id === hash)) activate(hash);
+  </script>
+</body>
+</html>
