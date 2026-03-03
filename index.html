@@ -322,7 +322,6 @@
         <a class="btn small" id="btnEmail" href="#">✉️ Email</a>
         <a class="btn small" id="btnLinkedIn" href="#" target="_blank" rel="noreferrer">in LinkedIn</a>
         <a class="btn small" id="btnCV" href="#" target="_blank" rel="noreferrer">⬇️ CV PDF</a>
-        <a class="btn small" href="projects.html">🖼️ Photos Projets</a>
         <button class="btn small" id="btnPrint" type="button">🖨️ Print</button>
       </div>
     </div>
@@ -517,9 +516,6 @@
 
         <div class="panel" id="projects" role="tabpanel">
           <div class="list" id="projectsList"></div>
-          <div style="margin-top:12px;">
-            <a class="btn small" href="projects.html">🖼️ Ouvrir l'onglet Projets</a>
-          </div>
         </div>
 
         <div class="panel" id="education" role="tabpanel">
@@ -564,6 +560,10 @@
   </div>
 
   <script>
+    const ROUTES = {
+      projectsPage: "projects.html"
+    };
+
     // =========================
     // EDIT HERE (easy)
     // =========================
@@ -796,6 +796,13 @@
         `;
         pr.appendChild(item);
       });
+      const projectCtaWrap = el("div");
+      projectCtaWrap.style.marginTop = "12px";
+      const projectCta = el("a","btn small");
+      projectCta.href = ROUTES.projectsPage;
+      projectCta.textContent = "🖼️ Ouvrir l'onglet Projets";
+      projectCtaWrap.appendChild(projectCta);
+      pr.appendChild(projectCtaWrap);
 
       // education
       const ed = $("educationList"); ed.innerHTML = "";
