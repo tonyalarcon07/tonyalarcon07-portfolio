@@ -37,15 +37,63 @@
     html,body{height:100%}
     body{
       margin:0;
+      min-height: 100svh;
       font-family: var(--font);
       color: var(--text);
+      background-color: var(--bg);
       background:
-        radial-gradient(900px 500px at 20% 0%, rgba(122,162,255,.25), transparent 60%),
-        radial-gradient(900px 500px at 90% 10%, rgba(110,243,197,.18), transparent 60%),
-        var(--bg);
+        radial-gradient(120% 70% at 18% 10%, rgba(120,170,255,.30), transparent 62%),
+        radial-gradient(110% 68% at 82% 16%, rgba(165,130,255,.26), transparent 62%),
+        linear-gradient(140deg, #0b1220 0%, #2f64ff 42%, #8467ff 74%, #0b1220 100%);
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-attachment: fixed;
+      position: relative;
+      overflow-x: hidden;
+    }
+    #starfield{
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .star{
+      position: absolute;
+      border-radius: 999px;
+      background: #fff;
+      box-shadow: 0 0 8px rgba(255,255,255,.45);
+      animation: twinkle var(--twinkle, 7s) ease-in-out infinite;
+    }
+    .star.big{box-shadow: 0 0 14px rgba(190,215,255,.65)}
+    @keyframes twinkle{
+      0%,100%{opacity:.18; transform: scale(.85)}
+      50%{opacity:1; transform: scale(1.18)}
+    }
+    body::before,
+    body::after{
+      content:"";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+    body::before{
+      z-index: -2;
+      opacity: .9;
+      background:
+        radial-gradient(340px 340px at 85% 20%, rgba(86,104,255,.48), rgba(42,40,95,.2) 60%, transparent 74%),
+        radial-gradient(240px 240px at 18% 76%, rgba(168,116,255,.42), rgba(76,38,120,.16) 58%, transparent 74%),
+        radial-gradient(900px 560px at 50% 110%, rgba(70,95,210,.16), transparent 70%);
+    }
+    body::after{
+      z-index: -1;
+      opacity: .5;
+      background:
+        radial-gradient(150px 150px at 87% 19%, rgba(230,238,255,.25), transparent 72%),
+        radial-gradient(120px 120px at 20% 75%, rgba(255,224,255,.2), transparent 72%);
     }
     a{color:inherit}
-    .wrap{max-width:var(--max); margin:0 auto; padding:26px 16px 70px;}
+    .wrap{max-width:var(--max); margin:0 auto; padding:26px 16px 70px; position:relative; z-index:1;}
     .topbar{
       display:flex; align-items:center; justify-content:space-between; gap:12px;
       padding:14px 14px;
@@ -148,28 +196,59 @@
       margin: 0;
     }
 
-    .nav{
-      display:flex; gap:8px; flex-wrap:wrap;
-      margin-top: 12px;
-    }
-    .tab{
-      border:1px solid transparent;
-      padding:10px 12px;
-      border-radius: 14px;
+    .nav{margin-top:12px; position:relative; min-height:380px}
+    .space-hint{
+      text-align:center;
       color: var(--muted);
-      cursor:pointer;
-      user-select:none;
-      background: rgba(255,255,255,.03);
-      transition: background .2s ease, border-color .2s ease;
-      font-size: 13.5px;
+      font-size: 13px;
+      margin-bottom:10px;
+      opacity:.88;
+      letter-spacing:.01em;
     }
-    .tab[aria-selected="true"]{
-      color: var(--text);
-      border-color: rgba(122,162,255,.45);
-      background: rgba(122,162,255,.12);
+    .space-hint strong{color: var(--text); font-weight:600}
+    .space-stage{position:relative; border:1px solid var(--border); border-radius: var(--radius2); background: rgba(8,12,28,.32); overflow:hidden}
+    #space{width:100%; height:370px; display:block}
+    .orbit{fill:none; stroke: rgba(255,255,255,.09)}
+    .sun{filter: drop-shadow(0 0 14px rgba(255,204,85,.4));}
+    .planet{cursor:pointer; transition: opacity .2s ease}
+    .planet[aria-selected="true"]{opacity:1}
+    .planet[aria-selected="false"]{opacity:.84}
+    .planet:hover{filter: drop-shadow(0 0 12px rgba(255,255,255,.28)); opacity:1}
+    .planet-label{font-size:10px; fill: rgba(255,255,255,.86); pointer-events:none}
+    .planet.rotate circle{animation: planet-spin-svg .9s linear; transform-origin:center; transform-box: fill-box}
+    @keyframes planet-spin-svg{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+    #planetPanel{
+      background: rgba(10,12,24,.82);
+      backdrop-filter: blur(10px);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-top: 14px;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height .45s ease, opacity .4s ease, padding .4s ease;
     }
+    #planetPanel.open{
+      max-height: 800px;
+      opacity: 1;
+      padding: 14px;
+    }
+    #planetPanelTop{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap}
+    #planetCrumb{
+      display:inline-block;
+      padding:6px 10px;
+      border:1px solid var(--border);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size:12px;
+      margin-right:8px;
+    }
+    #planetTitle{font-weight:800}
+
     .panel{display:none}
-    .panel.active{display:block}
+    .panel.active{display:none}
 
     .list{display:flex; flex-direction:column; gap:10px}
     .item{
@@ -226,6 +305,7 @@
 </head>
 
 <body>
+  <div id="starfield" aria-hidden="true"></div>
   <div class="wrap" id="app">
     <div class="topbar">
       <div class="brand">
@@ -239,8 +319,8 @@
         <a class="btn small" id="btnEmail" href="#">✉️ Email</a>
         <a class="btn small" id="btnLinkedIn" href="#" target="_blank" rel="noreferrer">in LinkedIn</a>
         <a class="btn small" id="btnCV" href="#" target="_blank" rel="noreferrer">⬇️ CV PDF</a>
+        <a class="btn small" href="projects.html">🖼️ Photos Projets</a>
         <button class="btn small" id="btnPrint" type="button">🖨️ Print</button>
-        <button class="btn small primary" id="btnTheme" type="button">🌓 Theme</button>
       </div>
     </div>
 
@@ -256,15 +336,170 @@
 
         <p class="summary" id="summary"></p>
 
-        <div class="nav" role="tablist" aria-label="CV navigation">
-          <div class="tab" role="tab" tabindex="0" data-target="profile" aria-selected="true">Profile</div>
-          <div class="tab" role="tab" tabindex="0" data-target="experience" aria-selected="false">Experience</div>
-          <div class="tab" role="tab" tabindex="0" data-target="projects" aria-selected="false">Projects</div>
-          <div class="tab" role="tab" tabindex="0" data-target="education" aria-selected="false">Education</div>
-          <div class="tab" role="tab" tabindex="0" data-target="skills" aria-selected="false">Skills</div>
-          <div class="tab" role="tab" tabindex="0" data-target="languages" aria-selected="false">Languages</div>
-          <div class="tab" role="tab" tabindex="0" data-target="interests" aria-selected="false">Interests</div>
-          <div class="tab" role="tab" tabindex="0" data-target="contact" aria-selected="false">Contact</div>
+        <div class="nav" role="tablist" aria-label="Solar system navigation">
+          <p class="space-hint">✨ <strong>Cliquez sur une planète</strong> pour explorer chaque section</p>
+          <div class="space-stage">
+            <svg id="space" viewBox="-120 -120 240 240" aria-label="Solar navigation map">
+              <defs>
+                <filter id="fShadow"><feGaussianBlur in="SourceAlpha" stdDeviation="1.2"/><feOffset dx="1.8" dy="1.8"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                
+                <radialGradient id="gMercury" cx="28%" cy="26%" r="82%">
+                  <stop offset="0%" stop-color="#f8f8f8"/>
+                  <stop offset="18%" stop-color="#e0e0e0"/>
+                  <stop offset="38%" stop-color="#c0c0c0"/>
+                  <stop offset="62%" stop-color="#909090"/>
+                  <stop offset="85%" stop-color="#656565"/>
+                  <stop offset="100%" stop-color="#3a3a3f"/>
+                </radialGradient>
+                <radialGradient id="gVenus" cx="30%" cy="28%" r="84%">
+                  <stop offset="0%" stop-color="#fffef0"/>
+                  <stop offset="16%" stop-color="#fce8b8"/>
+                  <stop offset="36%" stop-color="#f0c880"/>
+                  <stop offset="58%" stop-color="#d8a850"/>
+                  <stop offset="80%" stop-color="#b87820"/>
+                  <stop offset="100%" stop-color="#704010"/>
+                </radialGradient>
+                <radialGradient id="gEarth" cx="28%" cy="26%" r="86%">
+                  <stop offset="0%" stop-color="#e8f8ff"/>
+                  <stop offset="20%" stop-color="#a0d8ff"/>
+                  <stop offset="40%" stop-color="#4ab0f0"/>
+                  <stop offset="56%" stop-color="#2f8ce0"/>
+                  <stop offset="70%" stop-color="#3a8a4a"/>
+                  <stop offset="84%" stop-color="#1f6832"/>
+                  <stop offset="100%" stop-color="#091820"/>
+                </radialGradient>
+                <radialGradient id="gMars" cx="30%" cy="26%" r="82%">
+                  <stop offset="0%" stop-color="#ffe8d0"/>
+                  <stop offset="24%" stop-color="#ffb888"/>
+                  <stop offset="48%" stop-color="#f08050"/>
+                  <stop offset="72%" stop-color="#b84a20"/>
+                  <stop offset="100%" stop-color="#682810"/>
+                </radialGradient>
+                <radialGradient id="gJupiter" cx="32%" cy="28%" r="88%">
+                  <stop offset="0%" stop-color="#fffef0"/>
+                  <stop offset="18%" stop-color="#f8e0b8"/>
+                  <stop offset="36%" stop-color="#e8c890"/>
+                  <stop offset="54%" stop-color="#d0a468"/>
+                  <stop offset="72%" stop-color="#a87848"/>
+                  <stop offset="90%" stop-color="#644828"/>
+                  <stop offset="100%" stop-color="#3a2010"/>
+                </radialGradient>
+                <radialGradient id="gSaturn" cx="32%" cy="28%" r="88%">
+                  <stop offset="0%" stop-color="#fffef0"/>
+                  <stop offset="20%" stop-color="#f8e8c8"/>
+                  <stop offset="40%" stop-color="#e8d4a8"/>
+                  <stop offset="60%" stop-color="#d0b480"/>
+                  <stop offset="78%" stop-color="#a88050"/>
+                  <stop offset="100%" stop-color="#604020"/>
+                </radialGradient>
+                <linearGradient id="gSaturnRing" x1="0%" y1="50%" x2="100%" y2="50%">
+                  <stop offset="0%" stop-color="rgba(140,120,80,.08)"/>
+                  <stop offset="15%" stop-color="rgba(200,180,130,.45)"/>
+                  <stop offset="35%" stop-color="rgba(245,228,180,.75)"/>
+                  <stop offset="50%" stop-color="rgba(255,240,200,.88)"/>
+                  <stop offset="65%" stop-color="rgba(245,228,180,.75)"/>
+                  <stop offset="85%" stop-color="rgba(200,180,130,.45)"/>
+                  <stop offset="100%" stop-color="rgba(140,120,80,.08)"/>
+                </linearGradient>
+                <radialGradient id="gUranus" cx="30%" cy="28%" r="84%">
+                  <stop offset="0%" stop-color="#f5fdff"/>
+                  <stop offset="22%" stop-color="#c8f0f8"/>
+                  <stop offset="44%" stop-color="#90dce8"/>
+                  <stop offset="68%" stop-color="#58b8d0"/>
+                  <stop offset="88%" stop-color="#2a7a90"/>
+                  <stop offset="100%" stop-color="#155060"/>
+                </radialGradient>
+                <radialGradient id="gNeptune" cx="30%" cy="28%" r="84%">
+                  <stop offset="0%" stop-color="#e8f0ff"/>
+                  <stop offset="22%" stop-color="#b8d5f0"/>
+                  <stop offset="44%" stop-color="#7aabf0"/>
+                  <stop offset="66%" stop-color="#4a7fd0"/>
+                  <stop offset="84%" stop-color="#2a5090"/>
+                  <stop offset="100%" stop-color="#132850"/>
+                </radialGradient>
+              </defs>
+              <circle class="sun" cx="0" cy="0" r="16" fill="#ffcc55" />
+              <circle class="orbit" cx="0" cy="0" r="30" />
+              <circle class="orbit" cx="0" cy="0" r="50" />
+              <circle class="orbit" cx="0" cy="0" r="75" />
+              <circle class="orbit" cx="0" cy="0" r="100" />
+              <circle class="orbit" cx="0" cy="0" r="140" />
+              <circle class="orbit" cx="0" cy="0" r="170" />
+              <circle class="orbit" cx="0" cy="0" r="200" />
+
+
+              <g class="planet" role="tab" aria-selected="true" tabindex="0" data-target="profile" data-title="Profile" data-vb="-90 -90 140 120" transform="translate(-64,-64)">
+                <ellipse cx="0" cy="0" rx="21" ry="7" fill="none" stroke="url(#gSaturnRing)" stroke-width="2.8" opacity=".85"></ellipse>
+                <ellipse cx="0" cy="0" rx="18" ry="5.8" fill="none" stroke="rgba(210,190,150,.25)" stroke-width="1.2" opacity=".5"></ellipse>
+                <circle r="11" fill="url(#gSaturn)" stroke="rgba(0,0,0,.3)" stroke-width=".5" filter="url(#fShadow)"></circle>
+                <ellipse cx=".5" cy="-2.8" rx="9.5" ry="1.6" fill="rgba(230,210,170,.22)" opacity=".6"></ellipse>
+                <ellipse cx="-.3" cy=".8" rx="9.8" ry="1.8" fill="rgba(210,190,150,.25)" opacity=".65"></ellipse>
+                <ellipse cx=".2" cy="3.5" rx="9" ry="1.5" fill="rgba(190,170,130,.28)" opacity=".62"></ellipse>
+                <circle r="2.8" cx="-2.6" cy="-2.8" fill="rgba(255,255,255,.4)"></circle>
+                <text class="planet-label" x="0" y="16">Profile</text>
+              </g>
+              <g class="planet" role="tab" aria-selected="false" tabindex="0" data-target="experience" data-title="Experience" data-vb="-50 30 140 120" transform="translate(64,-64)">
+                <circle r="10" fill="url(#gNeptune)" stroke="rgba(0,0,0,.32)" stroke-width=".5" filter="url(#fShadow)"></circle>
+                <ellipse cx="0" cy="0" rx="10" ry="9.8" fill="rgba(255,255,255,.06)" opacity=".45"></ellipse>
+                <ellipse cx="1" cy="-2.8" rx="6.5" ry="1.5" fill="rgba(160,190,255,.22)" opacity=".6"></ellipse>
+                <ellipse cx="-.6" cy=".5" rx="7" ry="1.6" fill="rgba(140,175,245,.24)" opacity=".62"></ellipse>
+                <ellipse cx=".3" cy="3.2" rx="6.2" ry="1.4" fill="rgba(130,165,235,.26)" opacity=".58"></ellipse>
+                <ellipse cx="3.2" cy="-1.2" rx="2.8" ry="3.5" fill="rgba(100,140,210,.35)" opacity=".65"></ellipse>
+                <circle r="2.6" cx="-2.4" cy="-2.6" fill="rgba(255,255,255,.4)"></circle>
+                <text class="planet-label" x="0" y="16">Experience</text>
+              </g>
+              <g class="planet" role="tab" aria-selected="false" tabindex="0" data-target="projects" data-title="Projects" data-vb="-50 -110 140 120" transform="translate(0,-90)">
+                <circle r="10" fill="url(#gUranus)" stroke="rgba(0,0,0,.32)" stroke-width=".5" filter="url(#fShadow)"></circle>
+                <ellipse cx="0" cy="0" rx="10" ry="9.8" fill="rgba(255,255,255,.06)" opacity=".45"></ellipse>
+                <ellipse cx="1.2" cy="-2.5" rx="6" ry="1.4" fill="rgba(180,235,240,.18)" opacity=".55"></ellipse>
+                <ellipse cx="-.8" cy="1.8" rx="6.5" ry="1.5" fill="rgba(160,225,235,.2)" opacity=".58"></ellipse>
+                <circle r="2.6" cx="-2.4" cy="-2.5" fill="rgba(255,255,255,.38)"></circle>
+                <text class="planet-label" x="0" y="16">Projects</text>
+              </g>
+              <g class="planet" role="tab" aria-selected="false" tabindex="0" data-target="education" data-title="Education" data-vb="-110 -90 140 120" transform="translate(-90,0)">
+                <circle r="12" fill="url(#gJupiter)" stroke="rgba(0,0,0,.28)" stroke-width=".65" filter="url(#fShadow)"></circle>
+                <ellipse cx="0" cy="-3.5" rx="10" ry="1.8" fill="rgba(200,160,120,.28)" opacity=".65"></ellipse>
+                <ellipse cx=".8" cy="-1.2" rx="10.5" ry="2.2" fill="rgba(220,180,140,.22)" opacity=".6"></ellipse>
+                <ellipse cx="-.5" cy="1.8" rx="10" ry="1.9" fill="rgba(180,140,100,.3)" opacity=".7"></ellipse>
+                <ellipse cx=".3" cy="4.2" rx="9.5" ry="2" fill="rgba(160,120,85,.32)" opacity=".68"></ellipse>
+                <ellipse cx="3.5" cy="-.8" rx="3.8" ry="4.2" fill="rgba(190,110,70,.42)" opacity=".75"></ellipse>
+                <circle r="3.2" cx="-3.5" cy="-3.8" fill="rgba(255,255,255,.35)"></circle>
+                <text class="planet-label" x="0" y="16">Education</text>
+              </g>
+              <g class="planet" role="tab" aria-selected="false" tabindex="0" data-target="skills" data-title="Skills" data-vb="50 -45 100 90" transform="translate(90,0)">
+                <circle r="5" fill="url(#gMercury)" stroke="rgba(0,0,0,.35)" stroke-width=".3" filter="url(#fShadow)"></circle>
+                <circle r=".65" cx="-1.2" cy="1.3" fill="rgba(80,80,80,.45)" opacity=".7"></circle>
+                <circle r=".5" cx="1.8" cy="-1.1" fill="rgba(90,90,90,.4)" opacity=".65"></circle>
+                <circle r=".4" cx="-.6" cy="-.8" fill="rgba(70,70,70,.5)" opacity=".6"></circle>
+                <circle r="2.2" cx="-1.4" cy="-1.8" fill="rgba(255,255,255,.45)"></circle>
+                <text class="planet-label" x="0" y="7">Skills</text>
+              </g>
+              <g class="planet" role="tab" aria-selected="false" tabindex="0" data-target="languages" data-title="Languages" data-vb="30 15 100 90" transform="translate(64,64)">
+                <circle r="7" fill="url(#gVenus)" stroke="rgba(0,0,0,.3)" stroke-width=".4" filter="url(#fShadow)"></circle>
+                <ellipse cx="0" cy="0" rx="7" ry="6.8" fill="rgba(255,248,220,.15)" opacity=".5"></ellipse>
+                <ellipse cx="1.2" cy="-1.8" rx="3.5" ry="1.2" fill="rgba(240,220,180,.22)" opacity=".6"></ellipse>
+                <circle r="2.4" cx="-2.1" cy="-2.4" fill="rgba(255,255,255,.42)"></circle>
+                <text class="planet-label" x="0" y="10">Languages</text>
+              </g>
+              <g class="planet" role="tab" aria-selected="false" tabindex="0" data-target="interests" data-title="Interests" data-vb="-50 30 120 100" transform="translate(0,90)">
+                <circle r="8" fill="url(#gEarth)" stroke="rgba(0,0,0,.32)" stroke-width=".45" filter="url(#fShadow)"></circle>
+                <ellipse cx="-2" cy="1.5" rx="3.2" ry="2" fill="rgba(50,120,70,.65)" opacity=".75"></ellipse>
+                <ellipse cx="2.5" cy="-2" rx="2.8" ry="1.8" fill="rgba(45,110,65,.6)" opacity=".7"></ellipse>
+                <ellipse cx="0" cy="0" rx="8" ry="7.8" fill="rgba(255,255,255,.08)" opacity=".45"></ellipse>
+                <circle r="2.6" cx="-2.4" cy="-2.5" fill="rgba(255,255,255,.48)"></circle>
+                <text class="planet-label" x="0" y="10">Interests</text>
+              </g>
+              <g class="planet" role="tab" aria-selected="false" tabindex="0" data-target="contact" data-title="Contact" data-vb="-80 15 100 90" transform="translate(-64,64)">
+                <circle r="7" fill="url(#gMars)" stroke="rgba(0,0,0,.35)" stroke-width=".4" filter="url(#fShadow)"></circle>
+                <circle r=".8" cx="-2.2" cy="1.8" fill="rgba(140,50,30,.55)" opacity=".7"></circle>
+                <circle r=".6" cx="1.5" cy="-1.8" fill="rgba(130,45,25,.5)" opacity=".65"></circle>
+                <circle r=".5" cx=".2" cy="2.4" fill="rgba(135,48,28,.52)" opacity=".68"></circle>
+                <ellipse cx="-1.8" cy=".5" rx="2.4" ry="1.2" fill="rgba(180,90,60,.35)" opacity=".5"></ellipse>
+                <circle r="2.2" cx="-2.2" cy="-2.3" fill="rgba(255,255,255,.38)"></circle>
+                <text class="planet-label" x="0" y="10">Contact</text>
+              </g>
+            </svg>
+          </div>
         </div>
 
         <div class="panel active" id="profile" role="tabpanel">
@@ -307,6 +542,17 @@
         <h2>Quick Info</h2>
         <div class="list" id="sidebar"></div>
         <div class="footer" id="footer"></div>
+
+        <div id="planetPanel" aria-live="polite">
+          <div id="planetPanelTop">
+            <div>
+              <span id="planetCrumb">Section</span>
+              <strong id="planetTitle">—</strong>
+            </div>
+            <button id="planetBack" class="btn small" type="button">Retour au système</button>
+          </div>
+          <div id="planetContent"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -462,7 +708,7 @@
         { label: "Email", value: "tony.alarcon07@gmail.com", href: "mailto:tony.alarcon07@gmail.com" },
         { label: "Phone", value: "+33 6 95 22 66 53", href: "tel:+33695226653" },
         { label: "Location", value: "Lavoulte-sur-Rhône, France" },
-        { label: "LinkedIn", value: "Add your link", href: "https://www.linkedin.com/in/ADD-YOUR-LINK" }
+        { label: "LinkedIn", value: "tony-alarcon-svg", href: "https://www.linkedin.com/in/tony-alarcon-svg" }
       ]
     };
 
@@ -621,44 +867,146 @@
       return item;
     }
 
-    // Tabs
-    const tabs = Array.from(document.querySelectorAll(".tab"));
+    // Solar tabs
+    const planets = Array.from(document.querySelectorAll(".planet"));
     const panels = Array.from(document.querySelectorAll(".panel"));
+    const space = $("space");
+    const planetPanel = $("planetPanel");
+    const planetCrumb = $("planetCrumb");
+    const planetTitle = $("planetTitle");
+    const planetContent = $("planetContent");
+    const planetBack = $("planetBack");
+    const starfield = $("starfield");
+    const DEFAULT_VB = space.getAttribute("viewBox") || "-120 -120 240 240";
+
+    function getPlanetViewBox(node){
+      const box = node.getBBox();
+      const centerX = box.x + box.width / 2;
+      const centerY = box.y + box.height / 2;
+      const minSize = 88;
+      const padding = 28;
+      const size = Math.max(box.width, box.height, minSize) + padding * 2;
+
+      return `${centerX - size / 2} ${centerY - size / 2} ${size} ${size}`;
+    }
+
+    function buildStarfield(count = 280){
+      if(!starfield) return;
+      starfield.innerHTML = "";
+      const frag = document.createDocumentFragment();
+
+      for(let i = 0; i < count; i++){
+        const star = document.createElement("span");
+        star.className = Math.random() > .9 ? "star big" : "star";
+
+        const size = (Math.random() * 2 + .5).toFixed(2);
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.left = `${(Math.random() * 100).toFixed(2)}%`;
+        star.style.top = `${(Math.random() * 100).toFixed(2)}%`;
+        star.style.opacity = (Math.random() * .75 + .2).toFixed(2);
+        star.style.setProperty("--twinkle", `${(Math.random() * 8 + 4).toFixed(2)}s`);
+        star.style.animationDelay = `${(Math.random() * 10).toFixed(2)}s`;
+
+        frag.appendChild(star);
+      }
+
+      starfield.appendChild(frag);
+    }
 
     function activate(id){
-      tabs.forEach(t => t.setAttribute("aria-selected", String(t.dataset.target === id)));
+      planets.forEach(p => p.setAttribute("aria-selected", String(p.dataset.target === id)));
       panels.forEach(p => p.classList.toggle("active", p.id === id));
-      history.replaceState(null, "", "#" + id);
     }
-    tabs.forEach(t => {
-      t.addEventListener("click", () => activate(t.dataset.target));
-      t.addEventListener("keydown", (e) => {
-        if(e.key === "Enter" || e.key === " ") activate(t.dataset.target);
+
+    function animateViewBox(from, to, ms = 700){
+      const [fx, fy, fw, fh] = from.split(" ").map(Number);
+      const [tx, ty, tw, th] = to.split(" ").map(Number);
+      const t0 = performance.now();
+
+      function tick(t){
+        const p = Math.min(1, (t - t0) / ms);
+        const e = p < .5 ? 4*p*p*p : 1 - Math.pow(-2*p + 2, 3) / 2;
+
+        const x = fx + (tx - fx) * e;
+        const y = fy + (ty - fy) * e;
+        const w = fw + (tw - fw) * e;
+        const h = fh + (th - fh) * e;
+
+        space.setAttribute("viewBox", `${x} ${y} ${w} ${h}`);
+        if(p < 1) requestAnimationFrame(tick);
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    function openPlanet(node){
+      const id = node.dataset.target;
+      const targetPanel = document.getElementById(id);
+      if(!targetPanel) return;
+
+      node.classList.remove("rotate");
+      void node.getBoundingClientRect().width;
+      node.classList.add("rotate");
+      setTimeout(() => node.classList.remove("rotate"), 920);
+
+      animateViewBox(space.getAttribute("viewBox") || DEFAULT_VB, getPlanetViewBox(node), 850);
+      activate(id);
+
+      setTimeout(() => {
+        planetCrumb.textContent = "Section";
+        planetTitle.textContent = node.dataset.title || id;
+        planetContent.innerHTML = targetPanel.innerHTML;
+        planetPanel.classList.add("open");
+        history.replaceState({ section: id }, "", `#${id}`);
+      }, 480);
+    }
+
+    function closePlanet(){
+      planetPanel.classList.remove("open");
+      animateViewBox(space.getAttribute("viewBox") || DEFAULT_VB, DEFAULT_VB, 650);
+      history.replaceState({}, "", "#");
+    }
+
+    space.addEventListener("click", (e) => {
+      const node = e.target.closest(".planet");
+      if(node){
+        openPlanet(node);
+      } else if(planetPanel.classList.contains("open")){
+        closePlanet();
+      }
+    });
+
+    planets.forEach(node => {
+      node.addEventListener("keydown", (e) => {
+        if(e.key === "Enter" || e.key === " "){
+          e.preventDefault();
+          openPlanet(node);
+        }
       });
     });
 
-    // Theme
-    const themeKey = "cv_theme";
-    function setTheme(mode){
-      document.documentElement.setAttribute("data-theme", mode);
-      localStorage.setItem(themeKey, mode);
-    }
-    $("btnTheme").addEventListener("click", () => {
-      const cur = document.documentElement.getAttribute("data-theme") || "dark";
-      setTheme(cur === "dark" ? "light" : "dark");
-    });
+    planetBack.addEventListener("click", closePlanet);
 
     // Print
     $("btnPrint").addEventListener("click", () => window.print());
 
     // Init
-    const saved = localStorage.getItem(themeKey);
-    if(saved) setTheme(saved);
-
+    // always use dark theme (default colors already set in CSS)
     render();
+    buildStarfield();
+
+    let starResizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(starResizeTimer);
+      starResizeTimer = setTimeout(() => buildStarfield(280), 180);
+    });
 
     const hash = (location.hash || "").replace("#", "");
-    if(hash && panels.some(p => p.id === hash)) activate(hash);
+    if(hash){
+      const node = planets.find(p => p.dataset.target === hash);
+      if(node) openPlanet(node);
+    }
   </script>
 </body>
 </html>

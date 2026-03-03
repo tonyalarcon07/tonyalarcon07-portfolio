@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Photos de mes projets — Tony Alarcon</title>
+  <meta name="description" content="Galerie photo des projets de Tony Alarcon" />
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:rgba(255,255,255,.06);
+      --border:rgba(255,255,255,.12);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.68);
+      --accent:#7aa2ff;
+      --radius:18px;
+      --max:1100px;
+      --font:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--font);
+      color:var(--text);
+      background:
+        radial-gradient(120% 70% at 18% 10%, rgba(120,170,255,.30), transparent 62%),
+        radial-gradient(110% 68% at 82% 16%, rgba(165,130,255,.26), transparent 62%),
+        linear-gradient(140deg, #0b1220 0%, #2f64ff 42%, #8467ff 74%, #0b1220 100%);
+      min-height:100svh;
+      padding:26px 16px 40px;
+    }
+
+    .wrap{max-width:var(--max); margin:0 auto;}
+    .topbar,
+    .card{
+      border:1px solid var(--border);
+      background:var(--panel);
+      border-radius:var(--radius);
+      backdrop-filter:blur(10px);
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:14px;
+      margin-bottom:16px;
+      flex-wrap:wrap;
+    }
+
+    h1{margin:0; font-size:30px; letter-spacing:-.02em}
+    p{margin:8px 0 0; color:var(--muted)}
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 12px;
+      text-decoration:none;
+      color:var(--text);
+      background:rgba(255,255,255,.05);
+    }
+
+    .card{padding:16px}
+    .hint{margin:0 0 14px; color:var(--muted)}
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+    }
+    @media (max-width:860px){
+      .grid{grid-template-columns:1fr}
+    }
+
+    .project{
+      border:1px solid var(--border);
+      border-radius:14px;
+      overflow:hidden;
+      background:rgba(255,255,255,.04);
+    }
+
+    .project img{
+      width:100%;
+      height:240px;
+      object-fit:cover;
+      display:block;
+      background:#111a30;
+    }
+
+    .project .content{padding:12px}
+    .project h2{margin:0; font-size:17px}
+    .project p{margin:6px 0 0; font-size:14px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div>
+        <h1>Photos de mes projets</h1>
+        <p>Galerie visuelle de mes réalisations techniques.</p>
+      </div>
+      <a class="btn" href="index.html">← Retour au portfolio</a>
+    </div>
+
+    <section class="card" aria-label="Galerie de projets">
+      <p class="hint">Remplace simplement les fichiers dans <strong>photos/</strong> en gardant les mêmes noms.</p>
+
+      <div class="grid">
+        <article class="project">
+          <img src="photos/IMG_1160.jpg" alt="Photo du projet 1" />
+          <div class="content">
+            <h2>Projet 1 — Digitalisation atelier</h2>
+            <p>Exemple: tablette pour améliorer l'efficacité des techniciens.</p>
+          </div>
+        </article>
+
+        <article class="project">
+          <img src="photos/projet-2.svg" alt="Photo du projet 2" />
+          <div class="content">
+            <h2>Projet 2 — Bibliothèque 3D</h2>
+            <p>Exemple: plans moteurs et intégration dans l'ERP.</p>
+          </div>
+        </article>
+
+        <article class="project">
+          <img src="photos/projet-3.svg" alt="Photo du projet 3" />
+          <div class="content">
+            <h2>Projet 3 — Motoreducteur connecté</h2>
+            <p>Exemple: coordination technique et suivi projet.</p>
+          </div>
+        </article>
+
+        <article class="project">
+          <img src="photos/projet-4.svg" alt="Photo du projet 4" />
+          <div class="content">
+            <h2>Projet 4 — Projet client</h2>
+            <p>Exemple: réunions client et production de plans 3D.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

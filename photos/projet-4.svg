@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Projet 4 placeholder">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4e2d17"/>
+      <stop offset="100%" stop-color="#b87820"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <circle cx="980" cy="170" r="130" fill="rgba(255,255,255,.14)"/>
+  <rect x="180" y="420" width="840" height="230" rx="18" fill="rgba(255,255,255,.14)"/>
+  <text x="600" y="360" fill="#ffffff" font-size="72" font-family="Arial, sans-serif" text-anchor="middle">Projet 4</text>
+  <text x="600" y="475" fill="#fff0df" font-size="34" font-family="Arial, sans-serif" text-anchor="middle">Ajoute ici ta vraie photo</text>
+</svg>
