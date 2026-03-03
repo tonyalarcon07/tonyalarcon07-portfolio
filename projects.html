@@ -90,11 +90,50 @@
       object-fit:cover;
       display:block;
       background:#111a30;
+      cursor: zoom-in;
     }
 
     .project .content{padding:12px}
     .project h2{margin:0; font-size:17px}
     .project p{margin:6px 0 0; font-size:14px}
+
+    .lightbox{
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(4,6,14,.9);
+      z-index: 999;
+    }
+    .lightbox.open{display:flex}
+
+    .lightbox-img{
+      max-width: min(1200px, 95vw);
+      max-height: 88vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #0f172d;
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+      cursor: zoom-out;
+    }
+
+    .lightbox-close{
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:9px 11px;
+      color:var(--text);
+      background:rgba(255,255,255,.08);
+      cursor:pointer;
+      font:inherit;
+    }
   </style>
 </head>
 <body>
@@ -148,5 +187,49 @@
       </div>
     </section>
   </div>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Fermer">✕</button>
+    <img class="lightbox-img" id="lightboxImg" alt="Aperçu agrandi" />
+  </div>
+
+  <script>
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightboxImg");
+    const lightboxClose = document.getElementById("lightboxClose");
+    const galleryImages = Array.from(document.querySelectorAll(".project img"));
+
+    function openLightbox(src, alt){
+      lightboxImg.src = src;
+      lightboxImg.alt = alt || "Photo du projet";
+      lightbox.classList.add("open");
+      lightbox.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox(){
+      lightbox.classList.remove("open");
+      lightbox.setAttribute("aria-hidden", "true");
+      lightboxImg.src = "";
+      document.body.style.overflow = "";
+    }
+
+    galleryImages.forEach((img) => {
+      img.addEventListener("click", () => openLightbox(img.src, img.alt));
+    });
+
+    lightboxClose.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", (e) => {
+      if(e.target === lightbox || e.target === lightboxImg){
+        closeLightbox();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape" && lightbox.classList.contains("open")){
+        closeLightbox();
+      }
+    });
+  </script>
 </body>
 </html>
