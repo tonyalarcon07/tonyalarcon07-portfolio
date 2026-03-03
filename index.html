@@ -516,6 +516,9 @@
         </div>
 
         <div class="panel" id="projects" role="tabpanel">
+          <div style="margin-bottom:12px;">
+            <a class="btn small" href="projects.html">🖼️ Ouvrir l'onglet Projets</a>
+          </div>
           <div class="list" id="projectsList"></div>
         </div>
 
@@ -786,13 +789,6 @@
 
       // projects
       const pr = $("projectsList"); pr.innerHTML = "";
-      const projectCtaWrap = el("div");
-      projectCtaWrap.style.marginBottom = "12px";
-      const projectCta = el("a","btn small");
-      projectCta.href = ROUTES.projectsPage;
-      projectCta.textContent = "🖼️ Ouvrir l'onglet Projets";
-      projectCtaWrap.appendChild(projectCta);
-      pr.appendChild(projectCtaWrap);
       DATA.projects.forEach(p => {
         const item = el("div","item");
         item.innerHTML = `
