@@ -18,6 +18,9 @@
       --muted: rgba(255,255,255,.68);
       --accent: #7aa2ff;
       --accent2:#6ef3c5;
+      --steel: #9aa6bd;
+      --bronze: #b89662;
+      --techline: rgba(232,241,255,.45);
       --shadow: 0 10px 40px rgba(0,0,0,.35);
       --radius: 18px;
       --radius2: 14px;
@@ -210,16 +213,92 @@
     }
     .space-hint strong{color: var(--text); font-weight:600}
     .space-stage{position:relative; border:1px solid var(--border); border-radius: var(--radius2); background: rgba(8,12,28,.32); overflow:hidden}
-    #space{width:100%; height:370px; display:block}
-    .orbit{fill:none; stroke: rgba(255,255,255,.09)}
+    .space-stage::before,
+    .space-stage::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+    }
+    .space-stage::before{
+      opacity:.22;
+      background:
+        linear-gradient(90deg, rgba(154,166,189,.16) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(154,166,189,.14) 1px, transparent 1px);
+      background-size: 26px 26px;
+      mix-blend-mode: screen;
+    }
+    .space-stage::after{
+      opacity:.55;
+      background: radial-gradient(72% 72% at 50% 50%, transparent 58%, rgba(5,8,20,.45) 100%);
+    }
+    #space{
+      width:100%;
+      height:370px;
+      display:block;
+      position:relative;
+      z-index:1;
+      background: radial-gradient(70% 70% at 50% 48%, rgba(16,20,42,.48), rgba(8,12,26,.12) 56%, transparent 90%);
+    }
+    .orbit{fill:none; stroke: rgba(236,244,255,.32); stroke-width:1.15; stroke-dasharray: 2 3.2}
+    .orbit.tech-orbit{stroke: rgba(184,202,232,.42); stroke-width:1; stroke-dasharray: 5 6; animation: orbit-slide 26s linear infinite}
+    .orbit.tech-orbit.watch{stroke: rgba(214,184,140,.42); stroke-dasharray: 2.2 4.8; animation-duration: 32s}
+    @keyframes orbit-slide{to{stroke-dashoffset:-320}}
     .sun{filter: drop-shadow(0 0 14px rgba(255,204,85,.4));}
-    .planet{cursor:pointer; transition: opacity .2s ease}
+    .sun-body{filter: drop-shadow(0 0 24px rgba(255,186,70,.72)) drop-shadow(0 0 40px rgba(255,120,40,.45));}
+    .sun .sun-core{animation: sun-spin 18s linear infinite; transform-origin:center; transform-box: fill-box}
+    .sun .sun-plasma{animation: sun-plasma 9.5s ease-in-out infinite; transform-origin:center; transform-box: fill-box}
+    .sun .sun-noise{animation: sun-spin-rev 26s linear infinite; transform-origin:center; transform-box: fill-box; mix-blend-mode: screen}
+    .sun .sun-rim{mix-blend-mode: screen; opacity:.78}
+    .sun .sun-corona{mix-blend-mode: screen; animation: sun-corona 3.8s ease-in-out infinite}
+    @keyframes sun-spin{to{transform: rotate(360deg)}}
+    @keyframes sun-spin-rev{to{transform: rotate(-360deg)}}
+    @keyframes sun-plasma{0%,100%{transform:scale(1);opacity:.62}50%{transform:scale(1.06);opacity:.92}}
+    @keyframes sun-corona{0%,100%{opacity:.32; transform:scale(1)}50%{opacity:.62; transform:scale(1.1)}}
+    .planet{cursor:pointer; transition: opacity .2s ease, transform .25s ease, filter .25s ease}
     .planet[aria-selected="true"]{opacity:1}
     .planet[aria-selected="false"]{opacity:.84}
     .planet:hover{filter: drop-shadow(0 0 12px rgba(255,255,255,.28)); opacity:1}
     .planet-label{font-size:10px; fill: rgba(255,255,255,.86); pointer-events:none}
     .planet.rotate circle{animation: planet-spin-svg .9s linear; transform-origin:center; transform-box: fill-box}
     @keyframes planet-spin-svg{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    .planet .micro-orbit{fill:none; stroke-width:.7; opacity:.6; animation: micro-drift 18s linear infinite; transform-origin:center; transform-box: fill-box}
+    .planet .micro-orbit.astro{stroke: rgba(222,236,255,.44); stroke-dasharray: 1.1 3.2}
+    .planet .micro-orbit.mech{stroke: rgba(165,178,201,.42); stroke-dasharray: 2.4 2.8}
+    .planet .micro-orbit.watch{stroke: rgba(195,161,112,.5); stroke-dasharray: 1.6 2.3}
+    @keyframes micro-drift{to{transform: rotate(360deg)}}
+    .planet .texture{pointer-events:none; opacity:.2; mix-blend-mode: screen}
+    .planet .texture.astro{opacity:.24}
+    .planet .texture.mech{opacity:.18}
+    .planet .texture.watch{opacity:.22}
+    .planet .texture.spin-slow{animation: texture-spin 42s linear infinite; transform-origin:center; transform-box: fill-box}
+    .planet .texture.spin-rev{animation: texture-spin-rev 54s linear infinite; transform-origin:center; transform-box: fill-box}
+    .planet:hover .texture{opacity:.34}
+    @keyframes texture-spin{to{transform: rotate(360deg)}}
+    @keyframes texture-spin-rev{to{transform: rotate(-360deg)}}
+    .planet .matter{pointer-events:none; mix-blend-mode: screen}
+    .planet .matter.band{fill:none; stroke-linecap:round; opacity:.52}
+    .planet .matter.band.soft{opacity:.34}
+    .planet .matter.watch{stroke: rgba(220,190,138,.55)}
+    .planet .matter.mech{stroke: rgba(176,192,222,.50)}
+    .planet .matter.astro{stroke: rgba(198,226,255,.52)}
+    .planet .matter.spot{opacity:.22}
+    .planet .planet-core{transform-origin:center; transform-box: fill-box; animation: self-rotate 24s linear infinite}
+    .planet.astro .planet-core{animation-duration: 30s}
+    .planet.mech .planet-core{animation-duration: 20s}
+    .planet.watch .planet-core{animation-duration: 24s}
+    .planet:nth-of-type(even) .planet-core{animation-direction: reverse}
+    @keyframes self-rotate{to{transform: rotate(360deg)}}
+    .planet-tracker{opacity:0; pointer-events:none; transition: opacity .25s ease}
+    .planet-tracker.active{opacity:1}
+    .planet-tracker .ring{fill:none; stroke: rgba(225,238,255,.78); stroke-width:.8; stroke-dasharray: 3 4}
+    .planet-tracker .ring.outer{stroke: rgba(186,206,236,.52); animation: tracker-spin 7s linear infinite}
+    .planet-tracker .ring.inner{stroke: rgba(240,210,160,.62); animation: tracker-spin-rev 5.8s linear infinite}
+    .planet-tracker .cross{stroke: rgba(236,244,255,.68); stroke-width:.7; stroke-linecap:round}
+    .planet-tracker .tag{font-size:8px; fill: rgba(230,240,255,.92); letter-spacing:.05em}
+    @keyframes tracker-spin{to{transform: rotate(360deg)}}
+    @keyframes tracker-spin-rev{to{transform: rotate(-360deg)}}
 
     #planetPanel{
       background: rgba(10,12,24,.82);
@@ -420,8 +499,61 @@
                   <stop offset="84%" stop-color="#2a5090"/>
                   <stop offset="100%" stop-color="#132850"/>
                 </radialGradient>
+                <radialGradient id="gSunCore" cx="34%" cy="28%" r="82%">
+                  <stop offset="0%" stop-color="#fff6c8"/>
+                  <stop offset="22%" stop-color="#ffe58a"/>
+                  <stop offset="46%" stop-color="#ffbe52"/>
+                  <stop offset="72%" stop-color="#ff7a2a"/>
+                  <stop offset="100%" stop-color="#a63b12"/>
+                </radialGradient>
+                <radialGradient id="gSunRim" cx="50%" cy="50%" r="70%">
+                  <stop offset="0%" stop-color="rgba(255,250,220,.0)"/>
+                  <stop offset="70%" stop-color="rgba(255,180,80,.28)"/>
+                  <stop offset="100%" stop-color="rgba(255,110,40,.65)"/>
+                </radialGradient>
+                <pattern id="pSunNoise" width="8" height="8" patternUnits="userSpaceOnUse">
+                  <rect width="8" height="8" fill="transparent"/>
+                  <circle cx="1.1" cy="1.3" r=".55" fill="rgba(255,250,220,.28)"/>
+                  <circle cx="4.9" cy="2.2" r=".42" fill="rgba(255,212,128,.24)"/>
+                  <circle cx="2.8" cy="5.7" r=".48" fill="rgba(255,188,102,.22)"/>
+                  <circle cx="6.4" cy="6.1" r=".5" fill="rgba(255,164,92,.2)"/>
+                  <path d="M0 4.1H8 M4.1 0V8" stroke="rgba(255,180,100,.10)" stroke-width=".25"/>
+                </pattern>
+                <filter id="fSunBump" x="-50%" y="-50%" width="200%" height="200%">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="noise"/>
+                  <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.6" xChannelSelector="R" yChannelSelector="G"/>
+                </filter>
+                <pattern id="pAstro" width="18" height="18" patternUnits="userSpaceOnUse">
+                  <rect width="18" height="18" fill="transparent"/>
+                  <circle cx="3" cy="4" r=".8" fill="rgba(232,242,255,.72)"/>
+                  <circle cx="12.5" cy="6" r=".55" fill="rgba(200,220,255,.68)"/>
+                  <circle cx="8" cy="14" r=".6" fill="rgba(245,248,255,.62)"/>
+                  <path d="M0 9H18 M9 0V18" stroke="rgba(170,200,235,.16)" stroke-width=".5"/>
+                </pattern>
+                <pattern id="pMech" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <rect width="20" height="20" fill="transparent"/>
+                  <path d="M0 0H20 M0 10H20 M0 20H20 M0 0V20 M10 0V20 M20 0V20" stroke="rgba(190,204,228,.22)" stroke-width=".45"/>
+                  <circle cx="10" cy="10" r="3.2" fill="none" stroke="rgba(150,167,196,.38)" stroke-width=".7"/>
+                  <path d="M10 5.2V7.2 M14.8 10H12.8 M10 14.8V12.8 M5.2 10H7.2" stroke="rgba(160,176,204,.45)" stroke-width=".7" stroke-linecap="round"/>
+                </pattern>
+                <pattern id="pWatch" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <rect width="20" height="20" fill="transparent"/>
+                  <circle cx="10" cy="10" r="4.2" fill="none" stroke="rgba(205,171,118,.35)" stroke-width=".55"/>
+                  <circle cx="10" cy="10" r="7.6" fill="none" stroke="rgba(220,188,135,.24)" stroke-width=".45"/>
+                  <path d="M10 1.8V4.2 M18.2 10H15.8 M10 18.2V15.8 M1.8 10H4.2" stroke="rgba(230,204,160,.38)" stroke-width=".65" stroke-linecap="round"/>
+                </pattern>
               </defs>
-              <circle class="sun" cx="0" cy="0" r="16" fill="#ffcc55" />
+              <g class="sun" aria-hidden="true">
+                <circle class="sun-corona" cx="0" cy="0" r="26" fill="rgba(255,122,46,.24)"></circle>
+                <circle class="sun-body" cx="0" cy="0" r="20.6" fill="rgba(255,156,56,.42)"></circle>
+                <g class="sun-core" filter="url(#fSunBump)">
+                  <circle cx="0" cy="0" r="20" fill="url(#gSunCore)"></circle>
+                  <ellipse class="sun-plasma" cx="2.2" cy="-1.6" rx="10.5" ry="7" fill="rgba(255,238,160,.36)"></ellipse>
+                  <ellipse class="sun-plasma" cx="-3.4" cy="3.1" rx="8.2" ry="5.4" fill="rgba(255,170,88,.28)"></ellipse>
+                </g>
+                <circle class="sun-noise" cx="0" cy="0" r="18.4" fill="url(#pSunNoise)"></circle>
+                <circle class="sun-rim" cx="0" cy="0" r="20" fill="url(#gSunRim)"></circle>
+              </g>
               <circle class="orbit" cx="0" cy="0" r="30" />
               <circle class="orbit" cx="0" cy="0" r="50" />
               <circle class="orbit" cx="0" cy="0" r="75" />
@@ -429,77 +561,145 @@
               <circle class="orbit" cx="0" cy="0" r="140" />
               <circle class="orbit" cx="0" cy="0" r="170" />
               <circle class="orbit" cx="0" cy="0" r="200" />
+              <circle class="orbit tech-orbit" cx="0" cy="0" r="62" />
+              <circle class="orbit tech-orbit watch" cx="0" cy="0" r="118" />
+              <ellipse class="orbit tech-orbit" cx="0" cy="0" rx="188" ry="148" />
 
 
-              <g class="planet" role="tab" aria-selected="true" tabindex="0" data-target="profile" data-title="Profile" data-vb="-90 -90 140 120" transform="translate(-64,-64)">
+              <g class="planet watch" role="tab" aria-selected="true" tabindex="0" data-target="profile" data-title="Profile" data-vb="-90 -90 140 120" data-zoom="58" transform="translate(-64,-64)">
                 <ellipse cx="0" cy="0" rx="21" ry="7" fill="none" stroke="url(#gSaturnRing)" stroke-width="2.8" opacity=".85"></ellipse>
                 <ellipse cx="0" cy="0" rx="18" ry="5.8" fill="none" stroke="rgba(210,190,150,.25)" stroke-width="1.2" opacity=".5"></ellipse>
-                <circle r="11" fill="url(#gSaturn)" stroke="rgba(0,0,0,.3)" stroke-width=".5" filter="url(#fShadow)"></circle>
-                <ellipse cx=".5" cy="-2.8" rx="9.5" ry="1.6" fill="rgba(230,210,170,.22)" opacity=".6"></ellipse>
-                <ellipse cx="-.3" cy=".8" rx="9.8" ry="1.8" fill="rgba(210,190,150,.25)" opacity=".65"></ellipse>
-                <ellipse cx=".2" cy="3.5" rx="9" ry="1.5" fill="rgba(190,170,130,.28)" opacity=".62"></ellipse>
-                <circle r="2.8" cx="-2.6" cy="-2.8" fill="rgba(255,255,255,.4)"></circle>
+                <g class="planet-core">
+                  <circle r="11" fill="url(#gSaturn)" stroke="rgba(0,0,0,.3)" stroke-width=".5" filter="url(#fShadow)"></circle>
+                  <circle class="texture watch spin-slow" r="10.1" fill="url(#pWatch)"></circle>
+                  <circle class="micro-orbit watch" r="14.4"></circle>
+                  <ellipse class="matter band watch" cx=".2" cy="-2.4" rx="8.4" ry="1.2" stroke-width="1.1"></ellipse>
+                  <ellipse class="matter band watch soft" cx="-.3" cy="2.8" rx="8.2" ry="1.1" stroke-width=".95"></ellipse>
+                  <circle class="matter spot" r="10.2" fill="rgba(235,206,156,.16)"></circle>
+                  <ellipse cx=".5" cy="-2.8" rx="9.5" ry="1.6" fill="rgba(230,210,170,.22)" opacity=".6"></ellipse>
+                  <ellipse cx="-.3" cy=".8" rx="9.8" ry="1.8" fill="rgba(210,190,150,.25)" opacity=".65"></ellipse>
+                  <ellipse cx=".2" cy="3.5" rx="9" ry="1.5" fill="rgba(190,170,130,.28)" opacity=".62"></ellipse>
+                  <circle r="2.8" cx="-2.6" cy="-2.8" fill="rgba(255,255,255,.4)"></circle>
+                </g>
                 <text class="planet-label" x="0" y="16">Profile</text>
               </g>
-              <g class="planet" role="tab" aria-selected="false" tabindex="0" data-target="experience" data-title="Experience" data-vb="-50 -90 140 120" transform="translate(64,-64)">
-                <circle r="10" fill="url(#gNeptune)" stroke="rgba(0,0,0,.32)" stroke-width=".5" filter="url(#fShadow)"></circle>
-                <ellipse cx="0" cy="0" rx="10" ry="9.8" fill="rgba(255,255,255,.06)" opacity=".45"></ellipse>
-                <ellipse cx="1" cy="-2.8" rx="6.5" ry="1.5" fill="rgba(160,190,255,.22)" opacity=".6"></ellipse>
-                <ellipse cx="-.6" cy=".5" rx="7" ry="1.6" fill="rgba(140,175,245,.24)" opacity=".62"></ellipse>
-                <ellipse cx=".3" cy="3.2" rx="6.2" ry="1.4" fill="rgba(130,165,235,.26)" opacity=".58"></ellipse>
-                <ellipse cx="3.2" cy="-1.2" rx="2.8" ry="3.5" fill="rgba(100,140,210,.35)" opacity=".65"></ellipse>
-                <circle r="2.6" cx="-2.4" cy="-2.6" fill="rgba(255,255,255,.4)"></circle>
+              <g class="planet mech" role="tab" aria-selected="false" tabindex="0" data-target="experience" data-title="Experience" data-vb="-50 -90 140 120" data-zoom="54" transform="translate(64,-64)">
+                <g class="planet-core">
+                  <circle r="10" fill="url(#gNeptune)" stroke="rgba(0,0,0,.32)" stroke-width=".5" filter="url(#fShadow)"></circle>
+                  <circle class="texture mech spin-rev" r="9.2" fill="url(#pMech)"></circle>
+                  <circle class="micro-orbit mech" r="12.6"></circle>
+                  <ellipse class="matter band mech" cx=".2" cy="-2.2" rx="6.6" ry="1.2" stroke-width="1"></ellipse>
+                  <ellipse class="matter band mech soft" cx="-.2" cy="1.7" rx="6.8" ry="1.25" stroke-width=".9"></ellipse>
+                  <circle class="matter spot" r="8.8" fill="rgba(176,202,240,.14)"></circle>
+                  <ellipse cx="0" cy="0" rx="10" ry="9.8" fill="rgba(255,255,255,.06)" opacity=".45"></ellipse>
+                  <ellipse cx="1" cy="-2.8" rx="6.5" ry="1.5" fill="rgba(160,190,255,.22)" opacity=".6"></ellipse>
+                  <ellipse cx="-.6" cy=".5" rx="7" ry="1.6" fill="rgba(140,175,245,.24)" opacity=".62"></ellipse>
+                  <ellipse cx=".3" cy="3.2" rx="6.2" ry="1.4" fill="rgba(130,165,235,.26)" opacity=".58"></ellipse>
+                  <ellipse cx="3.2" cy="-1.2" rx="2.8" ry="3.5" fill="rgba(100,140,210,.35)" opacity=".65"></ellipse>
+                  <circle r="2.6" cx="-2.4" cy="-2.6" fill="rgba(255,255,255,.4)"></circle>
+                </g>
                 <text class="planet-label" x="0" y="16">Experience</text>
               </g>
-              <g class="planet" role="tab" aria-selected="false" tabindex="0" data-target="projects" data-title="Projects" data-vb="-50 -110 140 120" transform="translate(0,-90)">
-                <circle r="10" fill="url(#gUranus)" stroke="rgba(0,0,0,.32)" stroke-width=".5" filter="url(#fShadow)"></circle>
-                <ellipse cx="0" cy="0" rx="10" ry="9.8" fill="rgba(255,255,255,.06)" opacity=".45"></ellipse>
-                <ellipse cx="1.2" cy="-2.5" rx="6" ry="1.4" fill="rgba(180,235,240,.18)" opacity=".55"></ellipse>
-                <ellipse cx="-.8" cy="1.8" rx="6.5" ry="1.5" fill="rgba(160,225,235,.2)" opacity=".58"></ellipse>
-                <circle r="2.6" cx="-2.4" cy="-2.5" fill="rgba(255,255,255,.38)"></circle>
+              <g class="planet watch" role="tab" aria-selected="false" tabindex="0" data-target="projects" data-vb="-50 -110 140 120" data-title="Projects" data-zoom="54" transform="translate(0,-90)">
+                <g class="planet-core">
+                  <circle r="10" fill="url(#gUranus)" stroke="rgba(0,0,0,.32)" stroke-width=".5" filter="url(#fShadow)"></circle>
+                  <circle class="texture watch spin-slow" r="9.1" fill="url(#pWatch)"></circle>
+                  <circle class="micro-orbit watch" r="12.8"></circle>
+                  <ellipse class="matter band watch" cx="0" cy="-2" rx="6.9" ry="1.1" stroke-width="1"></ellipse>
+                  <ellipse class="matter band watch soft" cx="0" cy="2.1" rx="7.1" ry="1.2" stroke-width=".9"></ellipse>
+                  <circle class="matter spot" r="8.6" fill="rgba(215,187,132,.14)"></circle>
+                  <ellipse cx="0" cy="0" rx="10" ry="9.8" fill="rgba(255,255,255,.06)" opacity=".45"></ellipse>
+                  <ellipse cx="1.2" cy="-2.5" rx="6" ry="1.4" fill="rgba(180,235,240,.18)" opacity=".55"></ellipse>
+                  <ellipse cx="-.8" cy="1.8" rx="6.5" ry="1.5" fill="rgba(160,225,235,.2)" opacity=".58"></ellipse>
+                  <circle r="2.6" cx="-2.4" cy="-2.5" fill="rgba(255,255,255,.38)"></circle>
+                </g>
                 <text class="planet-label" x="0" y="16">Projects</text>
               </g>
-              <g class="planet" role="tab" aria-selected="false" tabindex="0" data-target="education" data-title="Education" data-vb="-110 -90 140 120" transform="translate(-90,0)">
-                <circle r="12" fill="url(#gJupiter)" stroke="rgba(0,0,0,.28)" stroke-width=".65" filter="url(#fShadow)"></circle>
-                <ellipse cx="0" cy="-3.5" rx="10" ry="1.8" fill="rgba(200,160,120,.28)" opacity=".65"></ellipse>
-                <ellipse cx=".8" cy="-1.2" rx="10.5" ry="2.2" fill="rgba(220,180,140,.22)" opacity=".6"></ellipse>
-                <ellipse cx="-.5" cy="1.8" rx="10" ry="1.9" fill="rgba(180,140,100,.3)" opacity=".7"></ellipse>
-                <ellipse cx=".3" cy="4.2" rx="9.5" ry="2" fill="rgba(160,120,85,.32)" opacity=".68"></ellipse>
-                <ellipse cx="3.5" cy="-.8" rx="3.8" ry="4.2" fill="rgba(190,110,70,.42)" opacity=".75"></ellipse>
-                <circle r="3.2" cx="-3.5" cy="-3.8" fill="rgba(255,255,255,.35)"></circle>
+              <g class="planet mech" role="tab" aria-selected="false" tabindex="0" data-target="education" data-title="Education" data-vb="-110 -90 140 120" data-zoom="60" transform="translate(-90,0)">
+                <g class="planet-core">
+                  <circle r="12" fill="url(#gJupiter)" stroke="rgba(0,0,0,.28)" stroke-width=".65" filter="url(#fShadow)"></circle>
+                  <circle class="texture mech spin-rev" r="11" fill="url(#pMech)"></circle>
+                  <circle class="micro-orbit mech" r="15.2"></circle>
+                  <ellipse class="matter band mech" cx="0" cy="-3.1" rx="9.2" ry="1.35" stroke-width="1.15"></ellipse>
+                  <ellipse class="matter band mech soft" cx=".2" cy="2.9" rx="9" ry="1.3" stroke-width="1"></ellipse>
+                  <circle class="matter spot" r="10.3" fill="rgba(180,205,235,.12)"></circle>
+                  <ellipse cx="0" cy="-3.5" rx="10" ry="1.8" fill="rgba(200,160,120,.28)" opacity=".65"></ellipse>
+                  <ellipse cx=".8" cy="-1.2" rx="10.5" ry="2.2" fill="rgba(220,180,140,.22)" opacity=".6"></ellipse>
+                  <ellipse cx="-.5" cy="1.8" rx="10" ry="1.9" fill="rgba(180,140,100,.3)" opacity=".7"></ellipse>
+                  <ellipse cx=".3" cy="4.2" rx="9.5" ry="2" fill="rgba(160,120,85,.32)" opacity=".68"></ellipse>
+                  <ellipse cx="3.5" cy="-.8" rx="3.8" ry="4.2" fill="rgba(190,110,70,.42)" opacity=".75"></ellipse>
+                  <circle r="3.2" cx="-3.5" cy="-3.8" fill="rgba(255,255,255,.35)"></circle>
+                </g>
                 <text class="planet-label" x="0" y="16">Education</text>
               </g>
-              <g class="planet" role="tab" aria-selected="false" tabindex="0" data-target="skills" data-title="Skills" data-vb="50 -45 100 90" transform="translate(90,0)">
-                <circle r="5" fill="url(#gMercury)" stroke="rgba(0,0,0,.35)" stroke-width=".3" filter="url(#fShadow)"></circle>
-                <circle r=".65" cx="-1.2" cy="1.3" fill="rgba(80,80,80,.45)" opacity=".7"></circle>
-                <circle r=".5" cx="1.8" cy="-1.1" fill="rgba(90,90,90,.4)" opacity=".65"></circle>
-                <circle r=".4" cx="-.6" cy="-.8" fill="rgba(70,70,70,.5)" opacity=".6"></circle>
-                <circle r="2.2" cx="-1.4" cy="-1.8" fill="rgba(255,255,255,.45)"></circle>
+              <g class="planet mech" role="tab" aria-selected="false" tabindex="0" data-target="skills" data-title="Skills" data-vb="50 -45 100 90" data-zoom="42" transform="translate(90,0)">
+                <g class="planet-core">
+                  <circle r="5" fill="url(#gMercury)" stroke="rgba(0,0,0,.35)" stroke-width=".3" filter="url(#fShadow)"></circle>
+                  <circle class="texture mech spin-rev" r="4.4" fill="url(#pMech)"></circle>
+                  <circle class="micro-orbit mech" r="6.9"></circle>
+                  <ellipse class="matter band mech" cx="0" cy="-.8" rx="2.8" ry=".55" stroke-width=".65"></ellipse>
+                  <ellipse class="matter band mech soft" cx="0" cy="1.1" rx="2.7" ry=".55" stroke-width=".58"></ellipse>
+                  <circle r=".65" cx="-1.2" cy="1.3" fill="rgba(80,80,80,.45)" opacity=".7"></circle>
+                  <circle r=".5" cx="1.8" cy="-1.1" fill="rgba(90,90,90,.4)" opacity=".65"></circle>
+                  <circle r=".4" cx="-.6" cy="-.8" fill="rgba(70,70,70,.5)" opacity=".6"></circle>
+                  <circle r="2.2" cx="-1.4" cy="-1.8" fill="rgba(255,255,255,.45)"></circle>
+                </g>
                 <text class="planet-label" x="0" y="7">Skills</text>
               </g>
-              <g class="planet" role="tab" aria-selected="false" tabindex="0" data-target="languages" data-title="Languages" data-vb="30 15 100 90" transform="translate(64,64)">
-                <circle r="7" fill="url(#gVenus)" stroke="rgba(0,0,0,.3)" stroke-width=".4" filter="url(#fShadow)"></circle>
-                <ellipse cx="0" cy="0" rx="7" ry="6.8" fill="rgba(255,248,220,.15)" opacity=".5"></ellipse>
-                <ellipse cx="1.2" cy="-1.8" rx="3.5" ry="1.2" fill="rgba(240,220,180,.22)" opacity=".6"></ellipse>
-                <circle r="2.4" cx="-2.1" cy="-2.4" fill="rgba(255,255,255,.42)"></circle>
+              <g class="planet astro" role="tab" aria-selected="false" tabindex="0" data-target="languages" data-title="Languages" data-vb="30 15 100 90" data-zoom="44" transform="translate(64,64)">
+                <g class="planet-core">
+                  <circle r="7" fill="url(#gVenus)" stroke="rgba(0,0,0,.3)" stroke-width=".4" filter="url(#fShadow)"></circle>
+                  <circle class="texture astro spin-slow" r="6.2" fill="url(#pAstro)"></circle>
+                  <circle class="micro-orbit astro" r="9.6"></circle>
+                  <ellipse class="matter band astro" cx="0" cy="-1.6" rx="4.9" ry=".95" stroke-width=".85"></ellipse>
+                  <ellipse class="matter band astro soft" cx="0" cy="1.8" rx="5" ry="1" stroke-width=".78"></ellipse>
+                  <circle class="matter spot" r="5.8" fill="rgba(194,226,255,.14)"></circle>
+                  <ellipse cx="0" cy="0" rx="7" ry="6.8" fill="rgba(255,248,220,.15)" opacity=".5"></ellipse>
+                  <ellipse cx="1.2" cy="-1.8" rx="3.5" ry="1.2" fill="rgba(240,220,180,.22)" opacity=".6"></ellipse>
+                  <circle r="2.4" cx="-2.1" cy="-2.4" fill="rgba(255,255,255,.42)"></circle>
+                </g>
                 <text class="planet-label" x="0" y="10">Languages</text>
               </g>
-              <g class="planet" role="tab" aria-selected="false" tabindex="0" data-target="interests" data-title="Interests" data-vb="-50 30 120 100" transform="translate(0,90)">
-                <circle r="8" fill="url(#gEarth)" stroke="rgba(0,0,0,.32)" stroke-width=".45" filter="url(#fShadow)"></circle>
-                <ellipse cx="-2" cy="1.5" rx="3.2" ry="2" fill="rgba(50,120,70,.65)" opacity=".75"></ellipse>
-                <ellipse cx="2.5" cy="-2" rx="2.8" ry="1.8" fill="rgba(45,110,65,.6)" opacity=".7"></ellipse>
-                <ellipse cx="0" cy="0" rx="8" ry="7.8" fill="rgba(255,255,255,.08)" opacity=".45"></ellipse>
-                <circle r="2.6" cx="-2.4" cy="-2.5" fill="rgba(255,255,255,.48)"></circle>
+              <g class="planet astro" role="tab" aria-selected="false" tabindex="0" data-target="interests" data-title="Interests" data-vb="-50 30 120 100" data-zoom="46" transform="translate(0,90)">
+                <g class="planet-core">
+                  <circle r="8" fill="url(#gEarth)" stroke="rgba(0,0,0,.32)" stroke-width=".45" filter="url(#fShadow)"></circle>
+                  <circle class="texture astro spin-slow" r="7.2" fill="url(#pAstro)"></circle>
+                  <circle class="micro-orbit astro" r="10.7"></circle>
+                  <ellipse class="matter band astro" cx="0" cy="-2" rx="5.6" ry="1" stroke-width=".9"></ellipse>
+                  <ellipse class="matter band astro soft" cx="0" cy="2" rx="5.8" ry="1.05" stroke-width=".8"></ellipse>
+                  <circle class="matter spot" r="6.8" fill="rgba(182,220,255,.13)"></circle>
+                  <ellipse cx="-2" cy="1.5" rx="3.2" ry="2" fill="rgba(50,120,70,.65)" opacity=".75"></ellipse>
+                  <ellipse cx="2.5" cy="-2" rx="2.8" ry="1.8" fill="rgba(45,110,65,.6)" opacity=".7"></ellipse>
+                  <ellipse cx="0" cy="0" rx="8" ry="7.8" fill="rgba(255,255,255,.08)" opacity=".45"></ellipse>
+                  <circle r="2.6" cx="-2.4" cy="-2.5" fill="rgba(255,255,255,.48)"></circle>
+                </g>
                 <text class="planet-label" x="0" y="10">Interests</text>
               </g>
-              <g class="planet" role="tab" aria-selected="false" tabindex="0" data-target="contact" data-title="Contact" data-vb="-80 15 100 90" transform="translate(-64,64)">
-                <circle r="7" fill="url(#gMars)" stroke="rgba(0,0,0,.35)" stroke-width=".4" filter="url(#fShadow)"></circle>
-                <circle r=".8" cx="-2.2" cy="1.8" fill="rgba(140,50,30,.55)" opacity=".7"></circle>
-                <circle r=".6" cx="1.5" cy="-1.8" fill="rgba(130,45,25,.5)" opacity=".65"></circle>
-                <circle r=".5" cx=".2" cy="2.4" fill="rgba(135,48,28,.52)" opacity=".68"></circle>
-                <ellipse cx="-1.8" cy=".5" rx="2.4" ry="1.2" fill="rgba(180,90,60,.35)" opacity=".5"></ellipse>
-                <circle r="2.2" cx="-2.2" cy="-2.3" fill="rgba(255,255,255,.38)"></circle>
+              <g class="planet watch" role="tab" aria-selected="false" tabindex="0" data-target="contact" data-title="Contact" data-vb="-80 15 100 90" data-zoom="46" transform="translate(-64,64)">
+                <g class="planet-core">
+                  <circle r="7" fill="url(#gMars)" stroke="rgba(0,0,0,.35)" stroke-width=".4" filter="url(#fShadow)"></circle>
+                  <circle class="texture watch spin-rev" r="6.2" fill="url(#pWatch)"></circle>
+                  <circle class="micro-orbit watch" r="9.6"></circle>
+                  <ellipse class="matter band watch" cx="0" cy="-1.6" rx="5" ry=".95" stroke-width=".85"></ellipse>
+                  <ellipse class="matter band watch soft" cx="0" cy="1.9" rx="5.1" ry="1" stroke-width=".76"></ellipse>
+                  <circle class="matter spot" r="5.8" fill="rgba(225,180,132,.13)"></circle>
+                  <circle r=".8" cx="-2.2" cy="1.8" fill="rgba(140,50,30,.55)" opacity=".7"></circle>
+                  <circle r=".6" cx="1.5" cy="-1.8" fill="rgba(130,45,25,.5)" opacity=".65"></circle>
+                  <circle r=".5" cx=".2" cy="2.4" fill="rgba(135,48,28,.52)" opacity=".68"></circle>
+                  <ellipse cx="-1.8" cy=".5" rx="2.4" ry="1.2" fill="rgba(180,90,60,.35)" opacity=".5"></ellipse>
+                  <circle r="2.2" cx="-2.2" cy="-2.3" fill="rgba(255,255,255,.38)"></circle>
+                </g>
                 <text class="planet-label" x="0" y="10">Contact</text>
+              </g>
+
+              <g id="planetTracker" class="planet-tracker" transform="translate(0,0)">
+                <circle class="ring outer" r="16"></circle>
+                <circle class="ring inner" r="11"></circle>
+                <line class="cross" x1="-20" y1="0" x2="-13" y2="0"></line>
+                <line class="cross" x1="20" y1="0" x2="13" y2="0"></line>
+                <line class="cross" x1="0" y1="-20" x2="0" y2="-13"></line>
+                <line class="cross" x1="0" y1="20" x2="0" y2="13"></line>
+                <text id="trackerTag" class="tag" x="-16" y="-22"></text>
               </g>
             </svg>
           </div>
@@ -882,18 +1082,89 @@
     const planetTitle = $("planetTitle");
     const planetContent = $("planetContent");
     const planetBack = $("planetBack");
+    const planetTracker = $("planetTracker");
+    const trackerTag = $("trackerTag");
     const starfield = $("starfield");
     const DEFAULT_VB = space.getAttribute("viewBox") || "-120 -120 240 240";
+    const orbitMotions = [];
+    const orbitRadiusMap = {
+      skills: 28,
+      languages: 36,
+      interests: 45,
+      contact: 54,
+      education: 64,
+      profile: 73,
+      projects: 82,
+      experience: 90,
+    };
+    const orbitChaosMap = {
+      skills: { eccentricity: .03, tiltDeg: -4, phaseDeg: 18 },
+      languages: { eccentricity: .04, tiltDeg: 7, phaseDeg: 72 },
+      interests: { eccentricity: .05, tiltDeg: -9, phaseDeg: 132 },
+      contact: { eccentricity: .04, tiltDeg: 11, phaseDeg: 196 },
+      education: { eccentricity: .06, tiltDeg: -6, phaseDeg: 245 },
+      profile: { eccentricity: .05, tiltDeg: 4, phaseDeg: 288 },
+      projects: { eccentricity: .06, tiltDeg: -12, phaseDeg: 330 },
+      experience: { eccentricity: .07, tiltDeg: 9, phaseDeg: 20 },
+    };
+    let orbitFrame = null;
+    let orbitLastTs = 0;
+    let followFrame = null;
+    let followedPlanet = null;
+    let followStartTs = 0;
+
+    function parseViewBox(vb){
+      const parts = (vb || "").split(/\s+/).map(Number);
+      if(parts.length === 4 && parts.every(Number.isFinite)) return parts;
+      return DEFAULT_VB.split(/\s+/).map(Number);
+    }
+
+    function getPlanetCenter(node){
+      const tm = (node?.getAttribute("transform") || "").match(/translate\(([-\d.]+),\s*([-\d.]+)\)/);
+      if(tm){
+        const x = Number(tm[1]);
+        const y = Number(tm[2]);
+        if(Number.isFinite(x) && Number.isFinite(y)){
+          return { x, y };
+        }
+      }
+
+      const box = node.getBBox();
+      return {
+        x: box.x + box.width / 2,
+        y: box.y + box.height / 2,
+      };
+    }
 
     function getPlanetViewBox(node){
-      const box = node.getBBox();
-      const centerX = box.x + box.width / 2;
-      const centerY = box.y + box.height / 2;
-      const minSize = 88;
-      const padding = 28;
-      const size = Math.max(box.width, box.height, minSize) + padding * 2;
+      const center = getPlanetCenter(node);
+      const requestedSize = Number(node?.dataset?.zoom);
+      const minSize = 56;
+      const fallbackSize = 74;
+      const size = Number.isFinite(requestedSize) ? Math.max(minSize, requestedSize) : fallbackSize;
 
-      return `${centerX - size / 2} ${centerY - size / 2} ${size} ${size}`;
+      return `${(center.x - size / 2).toFixed(2)} ${(center.y - size / 2).toFixed(2)} ${size.toFixed(2)} ${size.toFixed(2)}`;
+    }
+
+    function getPlanetSpinSpec(node){
+      const core = node.querySelector(".planet-core");
+      if(!core) return { duration: 24, direction: 1 };
+
+      const style = window.getComputedStyle(core);
+      const rawDuration = (style.animationDuration || "24s").split(",")[0].trim();
+      const rawDirection = (style.animationDirection || "normal").split(",")[0].trim();
+      let duration = 24;
+
+      if(rawDuration.endsWith("ms")){
+        const ms = Number(rawDuration.replace("ms", ""));
+        if(Number.isFinite(ms) && ms > 0) duration = ms / 1000;
+      } else if(rawDuration.endsWith("s")){
+        const sec = Number(rawDuration.replace("s", ""));
+        if(Number.isFinite(sec) && sec > 0) duration = sec;
+      }
+
+      const direction = rawDirection === "reverse" ? -1 : 1;
+      return { duration, direction };
     }
 
     function getTargetViewBox(node){
@@ -929,6 +1200,112 @@
       starfield.appendChild(frag);
     }
 
+    function setupPlanetOrbits(){
+      orbitMotions.length = 0;
+
+      planets.forEach((node, index) => {
+        const t = node.getAttribute("transform") || "";
+        const m = t.match(/translate\(([-\d.]+),\s*([-\d.]+)\)/);
+        if(!m) return;
+
+        const x = Number(m[1]);
+        const y = Number(m[2]);
+        if(!Number.isFinite(x) || !Number.isFinite(y)) return;
+
+        const baseRadius = Math.hypot(x, y);
+        const angle = Math.atan2(y, x);
+        const target = node.dataset.target || "";
+        const mappedRadius = Number.isFinite(orbitRadiusMap[target]) ? orbitRadiusMap[target] : baseRadius;
+        const radius = Math.min(86, Math.max(24, mappedRadius));
+        const chaos = orbitChaosMap[target] || { eccentricity: .04, tiltDeg: 0, phaseDeg: 0 };
+        const eccentricity = Math.min(.09, Math.max(.02, chaos.eccentricity));
+        const tilt = (chaos.tiltDeg || 0) * (Math.PI / 180);
+        const phase = (chaos.phaseDeg || 0) * (Math.PI / 180);
+        const radiusX = radius * (1 + eccentricity);
+        const radiusY = radius * (1 - eccentricity);
+        const periodSeconds = 24 + Math.pow(Math.max(radius, 10) / 30, 1.3) * 10;
+        const angularSpeed = Math.PI * 2 / periodSeconds;
+
+        orbitMotions.push({ node, angle: angle + phase, angularSpeed, radiusX, radiusY, tilt });
+      });
+    }
+
+    function animatePlanetOrbits(ts){
+      if(!orbitMotions.length){
+        orbitFrame = requestAnimationFrame(animatePlanetOrbits);
+        return;
+      }
+
+      if(!orbitLastTs) orbitLastTs = ts;
+      const dt = Math.min(0.05, (ts - orbitLastTs) / 1000);
+      orbitLastTs = ts;
+
+      orbitMotions.forEach((motion) => {
+        motion.angle += motion.angularSpeed * dt;
+        const localX = Math.cos(motion.angle) * motion.radiusX;
+        const localY = Math.sin(motion.angle) * motion.radiusY;
+        const x = localX * Math.cos(motion.tilt) - localY * Math.sin(motion.tilt);
+        const y = localX * Math.sin(motion.tilt) + localY * Math.cos(motion.tilt);
+        motion.node.setAttribute("transform", `translate(${x.toFixed(2)},${y.toFixed(2)})`);
+      });
+
+      orbitFrame = requestAnimationFrame(animatePlanetOrbits);
+    }
+
+    function stopPlanetFollow(){
+      if(planetTracker) planetTracker.classList.remove("active");
+      if(followFrame){
+        cancelAnimationFrame(followFrame);
+        followFrame = null;
+      }
+    }
+
+    function startPlanetFollow(node){
+      followedPlanet = node;
+      stopPlanetFollow();
+      followStartTs = performance.now();
+      if(planetTracker){
+        planetTracker.classList.add("active");
+      }
+      if(trackerTag){
+        trackerTag.textContent = "";
+      }
+
+      function tick(ts){
+        if(!followedPlanet || !planetPanel.classList.contains("open")){
+          stopPlanetFollow();
+          return;
+        }
+
+        const center = getPlanetCenter(followedPlanet);
+        if(planetTracker){
+          planetTracker.setAttribute("transform", `translate(${center.x.toFixed(2)},${center.y.toFixed(2)})`);
+        }
+
+        const spin = getPlanetSpinSpec(followedPlanet);
+        const elapsed = Math.max(0, ((ts || performance.now()) - followStartTs) / 1000);
+        const angle = elapsed / spin.duration * Math.PI * 2 * spin.direction;
+        const orbitRadius = 9;
+        const camX = center.x + Math.cos(angle) * orbitRadius;
+        const camY = center.y + Math.sin(angle) * orbitRadius;
+        const trackedSize = parseViewBox(getPlanetViewBox(followedPlanet))[2];
+        const targetView = `${(camX - trackedSize / 2).toFixed(2)} ${(camY - trackedSize / 2).toFixed(2)} ${trackedSize.toFixed(2)} ${trackedSize.toFixed(2)}`;
+
+        const [cx, cy, cw, ch] = parseViewBox(space.getAttribute("viewBox") || DEFAULT_VB);
+        const [tx, ty, tw, th] = parseViewBox(targetView);
+        const ease = 0.2;
+        const nx = cx + (tx - cx) * ease;
+        const ny = cy + (ty - cy) * ease;
+        const nw = cw + (tw - cw) * ease;
+        const nh = ch + (th - ch) * ease;
+
+        space.setAttribute("viewBox", `${nx} ${ny} ${nw} ${nh}`);
+        followFrame = requestAnimationFrame(tick);
+      }
+
+      followFrame = requestAnimationFrame(tick);
+    }
+
     function activate(id){
       planets.forEach(p => p.setAttribute("aria-selected", String(p.dataset.target === id)));
       panels.forEach(p => p.classList.toggle("active", p.id === id));
@@ -959,6 +1336,8 @@
       const id = node.dataset.target;
       const targetPanel = document.getElementById(id);
       if(!targetPanel) return;
+      followedPlanet = node;
+      stopPlanetFollow();
 
       node.classList.remove("rotate");
       void node.getBoundingClientRect().width;
@@ -974,10 +1353,13 @@
         planetContent.innerHTML = targetPanel.innerHTML;
         planetPanel.classList.add("open");
         history.replaceState({ section: id }, "", `#${id}`);
+        startPlanetFollow(node);
       }, 480);
     }
 
     function closePlanet(){
+      followedPlanet = null;
+      stopPlanetFollow();
       planetPanel.classList.remove("open");
       animateViewBox(space.getAttribute("viewBox") || DEFAULT_VB, DEFAULT_VB, 650);
       history.replaceState({}, "", "#");
@@ -1010,6 +1392,10 @@
     // always use dark theme (default colors already set in CSS)
     render();
     buildStarfield();
+    setupPlanetOrbits();
+    if(orbitFrame) cancelAnimationFrame(orbitFrame);
+    orbitLastTs = 0;
+    orbitFrame = requestAnimationFrame(animatePlanetOrbits);
 
     let starResizeTimer;
     window.addEventListener("resize", () => {
