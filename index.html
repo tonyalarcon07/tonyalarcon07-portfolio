@@ -896,6 +896,15 @@
       return `${centerX - size / 2} ${centerY - size / 2} ${size} ${size}`;
     }
 
+    function getTargetViewBox(node){
+      const vb = (node.dataset.vb || "").trim();
+      const parts = vb.split(/\s+/).map(Number);
+      if(parts.length === 4 && parts.every(n => Number.isFinite(n))){
+        return vb;
+      }
+      return getPlanetViewBox(node);
+    }
+
     function buildStarfield(count = 280){
       if(!starfield) return;
       starfield.innerHTML = "";
@@ -956,7 +965,7 @@
       node.classList.add("rotate");
       setTimeout(() => node.classList.remove("rotate"), 920);
 
-      animateViewBox(space.getAttribute("viewBox") || DEFAULT_VB, getPlanetViewBox(node), 850);
+      animateViewBox(space.getAttribute("viewBox") || DEFAULT_VB, getTargetViewBox(node), 850);
       activate(id);
 
       setTimeout(() => {
